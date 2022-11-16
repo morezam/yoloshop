@@ -1,17 +1,25 @@
-import { Request, Response } from 'express';
-import { Product } from '../models/productModel';
+import { NextFunction, Request, Response } from 'express';
+import { Product } from '@models/productModel';
 
-export const getProducts = async (req: Request, res: Response) => {
+export const getProducts = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
 	try {
 		const products = await Product.find({});
 
 		res.json(products);
 	} catch (error) {
-		throw new Error(`Error in get products ${error.message}`);
+		next(error);
 	}
 };
 
-export const getProductById = async (req: Request, res: Response) => {
+export const getProductById = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
 	const { id } = req.params;
 	try {
 		const product = await Product.findById(id);
@@ -23,6 +31,31 @@ export const getProductById = async (req: Request, res: Response) => {
 
 		res.json(product);
 	} catch (error) {
-		throw new Error(`Error in get products ${error.message}`);
+		next(error);
+	}
+};
+
+export const createProduct = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	const { name, price, quantity, description, image, brand, category } =
+		req.body;
+
+	try {
+		const newProduct = await Product.create({
+			name,
+			price,
+			quantity,
+			description,
+			image,
+			brand,
+			category,
+		});
+
+		res.json(newProduct);
+	} catch (error) {
+		next(error);
 	}
 };

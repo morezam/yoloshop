@@ -1,12 +1,18 @@
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-type CallbackFn = (err: Error | null, isMatch?: boolean) => void;
+export interface IUser extends Document {
+	name: string;
+	email: string;
+	password: string;
+	isAdmin: boolean;
+	comparePassword: (candidatePassword: string) => boolean;
+}
 
-export const userSchema = new mongoose.Schema(
+export const userSchema = new mongoose.Schema<IUser>(
 	{
 		name: {
-			type: Number,
+			type: String,
 			required: true,
 		},
 		email: {
@@ -30,10 +36,9 @@ export const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre('save', function (next) {
-	var user = this;
+	const user = this;
 	if (!user.isModified('password')) return next();
 
-	// generate a salt
 	bcrypt.genSalt(10, function (err, salt) {
 		if (err) return next(err);
 
@@ -45,16 +50,8 @@ userSchema.pre('save', function (next) {
 	});
 });
 
-userSchema.methods.comparePassword = function (
-	candidatePassword: string,
-	cb: CallbackFn
-) {
-	bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
-		if (err) return cb(err);
-		cb(null, isMatch);
-	});
+userSchema.methods.comparePassword = function (candidatePassword: string) {
+	return bcrypt.compareSync(candidatePassword, this.password);
 };
 
-const User = mongoose.model('User', userSchema);
-
-export { User };
+export const User = mongoose.model('User', userSchema);

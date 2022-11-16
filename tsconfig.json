@@ -4,7 +4,14 @@
 		"target": "es6",
 		"rootDir": "./",
 		"esModuleInterop": true,
-		"moduleResolution": "node"
+		"moduleResolution": "node",
+		"baseUrl": "backend",
+		"paths": {
+			"@controllers/*": ["controllers/*"],
+			"@middleware/*": ["middleware/*"],
+			"@models/*": ["models/*"],
+			"@routes/*": ["routes/*"]
+		}
 	},
 	"include": ["backend/*"],
 	"exclude": ["node_modules", "frontend"]

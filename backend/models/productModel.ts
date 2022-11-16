@@ -1,7 +1,20 @@
 import mongoose from 'mongoose';
 import { commentSchema } from './commentModel';
 
-const productSchema = new mongoose.Schema(
+interface IProduct extends Document {
+	name: string;
+	price: number;
+	quantity: number;
+	description: string;
+	image: string;
+	brand: string;
+	rating: number;
+	category: string;
+	numComments: number;
+	comments: typeof commentSchema[];
+}
+
+const productSchema = new mongoose.Schema<IProduct>(
 	{
 		name: {
 			type: String,
@@ -49,6 +62,4 @@ const productSchema = new mongoose.Schema(
 	}
 );
 
-const Product = mongoose.model('Product', productSchema);
-
-export { Product };
+export const Product = mongoose.model('Product', productSchema);
