@@ -5,6 +5,7 @@ interface IProduct extends Document {
 	name: string;
 	price: number;
 	quantity: number;
+	user: mongoose.Schema.Types.ObjectId;
 	description: string;
 	image: string;
 	brand: string;
@@ -14,7 +15,7 @@ interface IProduct extends Document {
 	comments: typeof commentSchema[];
 }
 
-const productSchema = new mongoose.Schema<IProduct>(
+export const productSchema = new mongoose.Schema<IProduct>(
 	{
 		name: {
 			type: String,
@@ -23,6 +24,11 @@ const productSchema = new mongoose.Schema<IProduct>(
 		price: {
 			type: Number,
 			required: true,
+		},
+		user: {
+			type: mongoose.Schema.Types.ObjectId,
+			required: true,
+			ref: 'User',
 		},
 		quantity: {
 			type: Number,

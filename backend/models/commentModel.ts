@@ -1,12 +1,12 @@
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
-interface IComment {
+interface IComment extends Document {
 	rating: number;
 	user: mongoose.Schema.Types.ObjectId;
-	product: mongoose.Schema.Types.ObjectId;
 	text: string;
-	like: number;
-	disLike: number;
+	like?: number;
+	disLike?: number;
+	userName: string;
 }
 
 export const commentSchema = new mongoose.Schema<IComment>(
@@ -15,12 +15,11 @@ export const commentSchema = new mongoose.Schema<IComment>(
 			type: Number,
 			required: true,
 		},
-		user: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'User',
+		userName: {
+			type: String,
 			required: true,
 		},
-		product: {
+		user: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'User',
 			required: true,
@@ -31,12 +30,10 @@ export const commentSchema = new mongoose.Schema<IComment>(
 		},
 		like: {
 			type: Number,
-			required: true,
 			default: 0,
 		},
 		disLike: {
 			type: Number,
-			required: true,
 			default: 0,
 		},
 	},
@@ -44,5 +41,3 @@ export const commentSchema = new mongoose.Schema<IComment>(
 		timestamps: true,
 	}
 );
-
-export const Comment = mongoose.model('Comment', commentSchema);

@@ -10,6 +10,10 @@ declare global {
 	}
 }
 
+interface UserPayload {
+	id: string;
+}
+
 export const protect = async (
 	req: Request,
 	res: Response,
@@ -27,7 +31,7 @@ export const protect = async (
 		}
 
 		try {
-			const decoded = jwt.verify(token, process.env.JWT_SECRET) as any;
+			const decoded = jwt.verify(token, process.env.JWT_SECRET) as UserPayload;
 
 			const user = await User.findById(decoded.id);
 			req.user = user;
@@ -37,6 +41,7 @@ export const protect = async (
 			throw new Error(`Auth error ${error.message}`);
 		}
 	} else {
-		throw new Error('No Authorization Header was Found');
+		res.status(404);
+		res.json({ message: 'No Authorization Header was Found' });
 	}
 };

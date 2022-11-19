@@ -6,6 +6,10 @@ export interface IUser extends Document {
 	email: string;
 	password: string;
 	isAdmin: boolean;
+	favorites: {
+		_id: string;
+		name: string;
+	}[];
 	comparePassword: (candidatePassword: string) => boolean;
 }
 
@@ -24,6 +28,12 @@ export const userSchema = new mongoose.Schema<IUser>(
 			type: String,
 			required: true,
 		},
+		favorites: [
+			{
+				prodId: String,
+				name: String,
+			},
+		],
 		isAdmin: {
 			type: Boolean,
 			required: true,
