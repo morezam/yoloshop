@@ -10,7 +10,7 @@ import {
 	getFavoriteProducts,
 	setFavoriteProduct,
 	deleteFavoriteProduct,
-} from '@controllers/userController';
+} from '@controllers/user';
 import { protect } from '@middleware/authMiddleware';
 
 const router = express.Router();

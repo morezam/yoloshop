@@ -5,9 +5,11 @@ import {
 	createProduct,
 	updateProduct,
 	deleteProduct,
+} from '@controllers/product';
+import {
 	createProductComment,
 	deleteProductComment,
-} from '@controllers/productController';
+} from '@controllers/comment';
 import { protect } from '@middleware/authMiddleware';
 
 const router = express.Router();
