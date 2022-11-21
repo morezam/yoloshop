@@ -11,38 +11,49 @@ export const createProductComment = async (
 	try {
 		const product = (await Product.findById(id)) as any;
 
-		if (product) {
-			const alreadyCommented = product.comments.find(
-				c => c.user.toString() === req.user._id
-			);
-
-			if (alreadyCommented) {
-				res.status(400);
-				throw new Error('User already commented this product');
-			}
-
-			product.comments.push({
-				userName: req.user.name,
-				rating,
-				text,
-				user: req.user._id,
-			});
-
-			product.numComments = product.comments.length;
-
-			const avRating =
-				product.comments.reduce((acc, item) => item.rating + acc, 0) /
-				product.comments.length;
-
-			product.rating = +avRating.toFixed(1);
-
-			await product.save(function (err) {
-				if (err) console.log(err.message);
-				res.send('comment added');
-			});
+		if (!product) {
+			res.status(400);
+			next(new Error('No product found'));
+			return;
 		}
+
+		const alreadyCommented = product.comments.find(
+			c => c.user.toString() === req.user._id
+		);
+
+		if (alreadyCommented) {
+			res.status(400);
+			next(new Error('User already commented this product'));
+			return;
+		}
+
+		product.comments.push({
+			userName: req.user.name,
+			rating,
+			text,
+			user: req.user._id,
+		});
+
+		product.numComments = product.comments.length;
+
+		const avRating =
+			product.comments.reduce((acc, item) => item.rating + acc, 0) /
+			product.comments.length;
+
+		product.rating = +avRating.toFixed(1);
+
+		product.save(function (err) {
+			if (err) {
+				res.status(500);
+				next(err);
+				return;
+			}
+			res.send('comment added');
+		});
 	} catch (error) {
+		res.status(500);
 		next(error);
+		return;
 	}
 };
 
@@ -56,33 +67,42 @@ export const deleteProductComment = async (
 	try {
 		const product = (await Product.findById(id)) as any;
 
-		if (product) {
-			const comment = product.comments.find(
-				c => c._id.toString() === commentId
-			);
-
-			if (comment) {
-				product.comments = product.comments.filter(
-					c => c._id.toString() !== commentId
-				);
-				product.numComments = product.comments.length;
-
-				const avRating =
-					product.comments.reduce((acc, item) => item.rating + acc, 0) /
-					product.comments.length;
-
-				product.rating = +avRating.toFixed(1);
-
-				await product.save(function (err) {
-					if (err) console.log(err.message);
-					res.send('comment was removed');
-				});
-			} else {
-				res.status(404);
-				throw new Error('No comment was found');
-			}
+		if (!product) {
+			res.status(404);
+			next(new Error('No product was found'));
+			return;
 		}
+
+		const comment = product.comments.find(c => c._id.toString() === commentId);
+
+		if (!comment) {
+			res.status(404);
+			next(new Error('No comment was found'));
+			return;
+		}
+
+		product.comments = product.comments.filter(
+			c => c._id.toString() !== commentId
+		);
+		product.numComments = product.comments.length;
+
+		const avRating =
+			product.comments.reduce((acc, item) => item.rating + acc, 0) /
+			product.comments.length;
+
+		product.rating = +avRating.toFixed(1);
+
+		product.save(function (err) {
+			if (err) {
+				res.status(500);
+				next(err);
+				return;
+			}
+			res.send('comment was removed');
+		});
 	} catch (error) {
+		res.status(500);
 		next(error);
+		return;
 	}
 };

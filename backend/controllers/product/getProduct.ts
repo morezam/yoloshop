@@ -11,7 +11,9 @@ export const getProducts = async (
 
 		res.json(products);
 	} catch (error) {
+		res.status(500);
 		next(error);
+		return;
 	}
 };
 
@@ -26,11 +28,14 @@ export const getProductById = async (
 
 		if (!product) {
 			res.status(404);
-			throw new Error(`Product with id of ${id} was not found`);
+			next(new Error(`Product with id of ${id} was not found`));
+			return;
 		}
 
 		res.json(product);
 	} catch (error) {
+		res.status(500);
 		next(error);
+		return;
 	}
 };

@@ -10,6 +10,7 @@ import {
 	getFavoriteProducts,
 	setFavoriteProduct,
 	deleteFavoriteProduct,
+	userVerify,
 } from '@controllers/user';
 import { protect } from '@middleware/authMiddleware';
 
@@ -18,6 +19,8 @@ const router = express.Router();
 router.route('/').post(userRegister);
 router.route('/login').post(userLogin);
 router.route('/profile').get(protect, getUserProfile);
+
+router.route('/verify').get(userVerify);
 
 router.route('/all').get(protect, getAllUsers);
 router.route('/:id').delete(protect, deleteUser);

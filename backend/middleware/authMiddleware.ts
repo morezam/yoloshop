@@ -27,7 +27,8 @@ export const protect = async (
 
 		if (!token) {
 			res.status(401);
-			throw new Error('No token found, user is not authorized');
+			next(new Error('No token found, user is not authorized'));
+			return;
 		}
 
 		try {
@@ -38,10 +39,12 @@ export const protect = async (
 
 			next();
 		} catch (error) {
-			throw new Error(`Auth error ${error.message}`);
+			res.status(500);
+			next(new Error(`Auth error ${error.message}`));
+			return;
 		}
 	} else {
 		res.status(404);
-		res.json({ message: 'No Authorization Header was Found' });
+		next(new Error('No Authorization Header was Found'));
 	}
 };

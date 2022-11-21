@@ -9,26 +9,29 @@ export const createProduct = async (
 	const { name, price, quantity, description, image, brand, category } =
 		req.body;
 
-	if (req.user.isAdmin) {
-		try {
-			const newProduct = await Product.create({
-				name,
-				price,
-				quantity,
-				description,
-				image,
-				brand,
-				category,
-				user: req.user._id,
-			});
+	if (!req.user.isAdmin) {
+		res.status(401);
+		next(new Error('To create a product you must be admin.'));
+		return;
+	}
 
-			res.json(newProduct);
-		} catch (error) {
-			next(error);
-		}
-	} else {
+	try {
+		const newProduct = await Product.create({
+			name,
+			price,
+			quantity,
+			description,
+			image,
+			brand,
+			category,
+			user: req.user._id,
+		});
+
+		res.json(newProduct);
+	} catch (error) {
 		res.status(500);
-		throw new Error('To create a product you must be admin.');
+		next(error);
+		return;
 	}
 };
 
@@ -41,25 +44,28 @@ export const updateProduct = async (
 	const { name, price, quantity, description, image, brand, category } =
 		req.body;
 
-	if (req.user.isAdmin) {
-		try {
-			const product = await Product.findByIdAndUpdate(id, {
-				name,
-				price,
-				quantity,
-				description,
-				image,
-				brand,
-				category,
-			});
+	if (!req.user.isAdmin) {
+		res.status(401);
+		next(new Error('To delete a product you must be admin.'));
+		return;
+	}
 
-			res.send('Product successfully updated');
-		} catch (error) {
-			next(error);
-		}
-	} else {
+	try {
+		await Product.findByIdAndUpdate(id, {
+			name,
+			price,
+			quantity,
+			description,
+			image,
+			brand,
+			category,
+		});
+
+		res.send('Product successfully updated');
+	} catch (error) {
 		res.status(500);
-		throw new Error('To delete a product you must be admin.');
+		next(error);
+		return;
 	}
 };
 
@@ -70,15 +76,18 @@ export const deleteProduct = async (
 ) => {
 	const { id } = req.params;
 
-	if (req.user.isAdmin) {
-		try {
-			const product = await Product.findByIdAndDelete(id);
-			res.send('product successfully deleted');
-		} catch (error) {
-			next(error);
-		}
-	} else {
+	if (!req.user.isAdmin) {
+		res.status(401);
+		next(new Error('To delete a product you must be admin.'));
+		return;
+	}
+
+	try {
+		await Product.findByIdAndDelete(id);
+		res.send('product successfully deleted');
+	} catch (error) {
 		res.status(500);
-		throw new Error('To delete a product you must be admin.');
+		next(error);
+		return;
 	}
 };

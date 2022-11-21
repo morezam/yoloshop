@@ -13,7 +13,8 @@ export const getUserProfile = async (
 
 		if (!user) {
 			res.status(404);
-			throw new Error('User not found');
+			next(new Error('User not found'));
+			return;
 		}
 
 		res.json({
@@ -25,6 +26,7 @@ export const getUserProfile = async (
 	} catch (error) {
 		res.status(500);
 		next(error);
+		return;
 	}
 };
 
@@ -37,7 +39,8 @@ export const getAllUsers = async (
 
 	if (!isAdmin) {
 		res.status(401);
-		res.send('User Must be admin to see all users');
+		next(new Error('User Must be admin to see all users'));
+		return;
 	}
 
 	try {
@@ -47,5 +50,6 @@ export const getAllUsers = async (
 	} catch (error) {
 		res.status(500);
 		next(error);
+		return;
 	}
 };

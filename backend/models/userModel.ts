@@ -6,6 +6,7 @@ export interface IUser extends Document {
 	email: string;
 	password: string;
 	isAdmin: boolean;
+	isVerified: boolean;
 	favorites: {
 		_id: string;
 		name: string;
@@ -35,6 +36,11 @@ export const userSchema = new mongoose.Schema<IUser>(
 			},
 		],
 		isAdmin: {
+			type: Boolean,
+			required: true,
+			default: false,
+		},
+		isVerified: {
 			type: Boolean,
 			required: true,
 			default: false,

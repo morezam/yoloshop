@@ -6,6 +6,7 @@ import {
 	setFavoriteProduct,
 	deleteFavoriteProduct,
 } from './favorites';
+import { userVerify } from './verifyUser';
 
 export {
 	userRegister,
@@ -18,4 +19,5 @@ export {
 	getFavoriteProducts,
 	setFavoriteProduct,
 	deleteFavoriteProduct,
+	userVerify,
 };

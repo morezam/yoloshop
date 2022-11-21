@@ -10,9 +10,10 @@
 			"@controllers/*": ["controllers/*"],
 			"@middleware/*": ["middleware/*"],
 			"@models/*": ["models/*"],
+			"@utils/*": ["utils/*"],
 			"@routes/*": ["routes/*"]
 		}
 	},
-	"include": ["backend/*"],
+	"include": ["backend"],
 	"exclude": ["node_modules", "frontend"]
 }
