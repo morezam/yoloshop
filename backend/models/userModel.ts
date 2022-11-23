@@ -1,18 +1,11 @@
 import mongoose, { Document } from 'mongoose';
 import bcrypt from 'bcryptjs';
+import { UserType } from '@types';
 
-export interface IUser extends Document {
-	name: string;
-	email: string;
-	password: string;
-	isAdmin: boolean;
-	isVerified: boolean;
-	favorites: {
-		_id: string;
-		name: string;
-	}[];
-	comparePassword: (candidatePassword: string) => boolean;
-}
+export type IUser = Document &
+	UserType & {
+		comparePassword: (candidatePassword: string) => boolean;
+	};
 
 export const userSchema = new mongoose.Schema<IUser>(
 	{

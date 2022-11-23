@@ -5,13 +5,14 @@
 		"rootDir": "./",
 		"esModuleInterop": true,
 		"moduleResolution": "node",
-		"baseUrl": "backend",
+		"baseUrl": "./",
 		"paths": {
-			"@controllers/*": ["controllers/*"],
-			"@middleware/*": ["middleware/*"],
-			"@models/*": ["models/*"],
-			"@utils/*": ["utils/*"],
-			"@routes/*": ["routes/*"]
+			"@controllers/*": ["backend/controllers/*"],
+			"@middleware/*": ["backend/middleware/*"],
+			"@models/*": ["backend/models/*"],
+			"@utils/*": ["backend/utils/*"],
+			"@routes/*": ["backend/routes/*"],
+			"@types": ["./frontend/types"]
 		}
 	},
 	"include": ["backend"],

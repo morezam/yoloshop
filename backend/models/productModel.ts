@@ -1,19 +1,8 @@
 import mongoose from 'mongoose';
 import { commentSchema } from './commentModel';
+import { ProductType } from '@types';
 
-interface IProduct extends Document {
-	name: string;
-	price: number;
-	quantity: number;
-	user: mongoose.Schema.Types.ObjectId;
-	description: string;
-	image: string;
-	brand: string;
-	rating: number;
-	category: string;
-	numComments: number;
-	comments: typeof commentSchema[];
-}
+type IProduct = Document & ProductType<mongoose.Schema.Types.ObjectId>;
 
 export const productSchema = new mongoose.Schema<IProduct>(
 	{

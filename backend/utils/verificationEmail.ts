@@ -10,6 +10,7 @@ export const verificationEmail = (userId: string, to: string, name: string) => {
 		}
 	);
 
+	// TODO: Change this url to production url
 	const url = `http://localhost:5000/user/verify?id=${token_mail_verification}`;
 
 	const mailOptions = {
@@ -19,7 +20,7 @@ export const verificationEmail = (userId: string, to: string, name: string) => {
 		html: `
     <div style="display: flex; flex-direction: column; align-items: center">
     <h1 style="font-size: 45px">
-      Welcome To <span style="color: cadetblue">Yolo</span> Shop ${name}.
+      Welcome To <span style="color: cadetblue">Yolo</span> Shop, ${name}.
     </h1>
 
     <p style="font-size: 25px">

@@ -41,7 +41,34 @@ export const userVerify = async (
 				next(err);
 				return;
 			}
-			res.send('User verified');
+
+			// TODO : Change this to production URL
+			const LOGIN_URL = 'http://localhost:5173/login';
+			res.send(`
+			<div style="display: flex; flex-direction: column; align-items: center">
+			<h1 style="font-size: 45px">
+				Your email has been successfully verified
+			</h1>
+	
+			<p style="font-size: 25px">
+				You can now login with to your account
+			</p>
+	
+			<p style="font-size: 25px; text-decoration: none">
+				<a
+					href=${LOGIN_URL}
+					style="
+						text-decoration: none;
+						background-color: cadetblue;
+						color: aliceblue;
+						padding: 15px 25px;
+						border-radius: 5px;
+					"
+					>Login</a
+				>
+			</p>
+		</div>
+			`);
 		});
 	} catch (error) {
 		res.status(500);

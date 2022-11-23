@@ -1,13 +1,7 @@
 import mongoose, { Document } from 'mongoose';
+import { CommentType } from '@types';
 
-interface IComment extends Document {
-	rating: number;
-	user: mongoose.Schema.Types.ObjectId;
-	text: string;
-	like?: number;
-	disLike?: number;
-	userName: string;
-}
+type IComment = Document & CommentType<mongoose.Schema.Types.ObjectId>;
 
 export const commentSchema = new mongoose.Schema<IComment>(
 	{
