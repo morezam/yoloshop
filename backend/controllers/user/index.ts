@@ -7,6 +7,11 @@ import {
 	deleteFavoriteProduct,
 } from './favorites';
 import { userVerify } from './verifyUser';
+import {
+	forgetPassword,
+	verifySecurityNumber,
+	changePasswordFromLogin,
+} from './forgetPass';
 
 export {
 	userRegister,
@@ -20,4 +25,7 @@ export {
 	setFavoriteProduct,
 	deleteFavoriteProduct,
 	userVerify,
+	forgetPassword,
+	verifySecurityNumber,
+	changePasswordFromLogin,
 };

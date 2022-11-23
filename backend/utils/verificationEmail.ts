@@ -1,7 +1,11 @@
 import jwt from 'jsonwebtoken';
 import { transporter } from './createTransporter';
 
-export const verificationEmail = (userId: string, to: string, name: string) => {
+export const verificationEmail = async (
+	userId: string,
+	to: string,
+	name: string
+) => {
 	const token_mail_verification = jwt.sign(
 		{ id: userId },
 		process.env.JWT_SECRET_MAIL,
@@ -44,11 +48,10 @@ export const verificationEmail = (userId: string, to: string, name: string) => {
     `,
 	};
 
-	transporter.sendMail(mailOptions, (err, info) => {
-		if (err) {
-			console.log(err);
-		} else {
-			console.log(info);
-		}
-	});
+	try {
+		await transporter.sendMail(mailOptions);
+		return true;
+	} catch (error) {
+		return false;
+	}
 };

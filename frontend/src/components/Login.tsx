@@ -1,8 +1,9 @@
 import { SyntheticEvent } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useAuthContext } from '@context/authContext';
 import { useMutation } from '@tanstack/react-query';
 import { shop } from '@utils/api';
+import { AxiosError } from 'axios';
 
 interface LoginResponse {
 	id: string;
@@ -11,12 +12,14 @@ interface LoginResponse {
 	name: string;
 }
 
+interface ErrorResponse {
+	message: string;
+}
+
 const Login = () => {
 	let location = useLocation();
 	const navigate = useNavigate();
 	const { setToken } = useAuthContext();
-
-	console.log(location);
 
 	const mutation = useMutation({
 		mutationFn: data => {
@@ -27,6 +30,9 @@ const Login = () => {
 			location.search === ''
 				? navigate('/')
 				: navigate(`/${location.search.slice(1)}`);
+		},
+		onError(error: AxiosError<ErrorResponse>) {
+			console.log(error.response?.data.message);
 		},
 	});
 
@@ -44,11 +50,14 @@ const Login = () => {
 	}
 
 	return (
-		<form onSubmit={onFormSubmit}>
-			<input type="email" name="email" />
-			<input type="password" name="password" />
-			<button type="submit">Submit</button>
-		</form>
+		<>
+			<form onSubmit={onFormSubmit}>
+				<input type="email" name="email" />
+				<input type="password" name="password" />
+				<button type="submit">Submit</button>
+			</form>
+			<Link to={'/user/password-reset'}>Forgot Your Password?</Link>
+		</>
 	);
 };
 

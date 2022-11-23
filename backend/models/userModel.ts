@@ -5,6 +5,7 @@ import { UserType } from '@types';
 export type IUser = Document &
 	UserType & {
 		comparePassword: (candidatePassword: string) => boolean;
+		securityNumber?: number;
 	};
 
 export const userSchema = new mongoose.Schema<IUser>(
@@ -38,6 +39,7 @@ export const userSchema = new mongoose.Schema<IUser>(
 			required: true,
 			default: false,
 		},
+		securityNumber: Number,
 	},
 	{
 		timestamps: true,

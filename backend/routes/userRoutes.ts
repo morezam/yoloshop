@@ -11,6 +11,9 @@ import {
 	setFavoriteProduct,
 	deleteFavoriteProduct,
 	userVerify,
+	forgetPassword,
+	verifySecurityNumber,
+	changePasswordFromLogin,
 } from '@controllers/user';
 import { protect } from '@middleware/authMiddleware';
 
@@ -21,6 +24,10 @@ router.route('/login').post(userLogin);
 router.route('/profile').get(protect, getUserProfile);
 
 router.route('/verify').get(userVerify);
+
+router.route('/forget-password').post(forgetPassword);
+router.route('/verify-secNum').post(verifySecurityNumber);
+router.route('/change-password-login').post(changePasswordFromLogin);
 
 router.route('/all').get(protect, getAllUsers);
 router.route('/:id').delete(protect, deleteUser);

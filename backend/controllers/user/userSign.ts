@@ -26,7 +26,17 @@ export const userRegister = async (
 			isAdmin: isAdmin ? isAdmin : false,
 		});
 
-		verificationEmail(newUser._id, newUser.email, newUser.name);
+		const sent = await verificationEmail(
+			newUser._id,
+			newUser.email,
+			newUser.name
+		);
+
+		if (!sent) {
+			res.status(400);
+			res.send('could not send the email');
+			return;
+		}
 
 		res.send(
 			`Verification Email was sent to ${newUser.email} please check your inbox and verify your email`

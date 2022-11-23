@@ -3,7 +3,9 @@ import Login from '@components/Login';
 import Logout from '@components/Logout';
 import Signup, { signupAction } from '@components/Signup';
 import EmailSent from '@pages/email-sent';
+import ForgetPassword from '@pages/forgetPassword';
 import UserProfile, { userLoader } from '@pages/userProfile';
+import VerifySecNum from '@pages/verify-secNum';
 import { RouteObject } from 'react-router-dom';
 
 export const userSignRoutes: RouteObject[] = [
@@ -24,7 +26,7 @@ export const userSignRoutes: RouteObject[] = [
 		errorElement: <ErrorComponent />,
 	},
 	{
-		path: '/email-sent',
+		path: '/user/email-sent',
 		element: <EmailSent />,
 		errorElement: <ErrorComponent />,
 	},
@@ -32,6 +34,16 @@ export const userSignRoutes: RouteObject[] = [
 		path: '/user/profile',
 		element: <UserProfile />,
 		loader: userLoader,
+		errorElement: <ErrorComponent />,
+	},
+	{
+		path: '/user/password-reset',
+		element: <ForgetPassword />,
+		errorElement: <ErrorComponent />,
+	},
+	{
+		path: '/user/verify-secNum',
+		element: <VerifySecNum />,
 		errorElement: <ErrorComponent />,
 	},
 ];
