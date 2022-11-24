@@ -4,6 +4,7 @@ import cors from 'cors';
 import { dbConnect } from './utils/dbConnect';
 import productRoutes from './routes/productRoutes';
 import userRoutes from './routes/userRoutes';
+import orderRoutes from './routes/orderRoutes';
 import { notFound, errorHandler } from './middleware/errorMiddleware';
 
 dotenv.config();
@@ -16,6 +17,7 @@ app.use(express.json());
 
 app.use('/products', productRoutes);
 app.use('/user', userRoutes);
+app.use('/orders', orderRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
