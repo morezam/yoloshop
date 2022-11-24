@@ -1,5 +1,5 @@
 import { SyntheticEvent } from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuthContext } from '@context/authContext';
 import { useMutation } from '@tanstack/react-query';
 import { shop } from '@utils/api';
@@ -16,20 +16,17 @@ interface ErrorResponse {
 	message: string;
 }
 
-const Login = () => {
-	let location = useLocation();
+const LoginComponent = ({ to }: { to: string }) => {
 	const navigate = useNavigate();
-	const { setToken } = useAuthContext();
+	const { setUser } = useAuthContext();
 
 	const mutation = useMutation({
 		mutationFn: data => {
 			return shop.post<LoginResponse>('/user/login', data);
 		},
 		onSuccess(data) {
-			setToken(data.data.token);
-			location.search === ''
-				? navigate('/')
-				: navigate(`/${location.search.slice(1)}`);
+			setUser(data.data);
+			to === '' ? navigate('/') : navigate(`/${to.slice(1)}`);
 		},
 		onError(error: AxiosError<ErrorResponse>) {
 			console.log(error.response?.data.message);
@@ -45,10 +42,6 @@ const Login = () => {
 		mutation.mutate(data);
 	};
 
-	if (mutation.data) {
-		console.log(mutation.data);
-	}
-
 	return (
 		<>
 			<form onSubmit={onFormSubmit}>
@@ -61,4 +54,4 @@ const Login = () => {
 	);
 };
 
-export default Login;
+export default LoginComponent;

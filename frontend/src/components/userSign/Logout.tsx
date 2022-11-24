@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
-import { useAuthContext } from '@context/authContext';
+import { initialState, useAuthContext } from '@context/authContext';
 import { useNavigate } from 'react-router-dom';
 
 const Logout = () => {
-	const { setToken } = useAuthContext();
+	const { setUser } = useAuthContext();
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		setToken(null);
+		setUser(initialState);
 		navigate('/');
 	}, []);
 	return <div>Logout</div>;

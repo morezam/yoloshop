@@ -1,5 +1,6 @@
 import AdminProfile from '@components/profile/AdminProfile';
 import UserProfile from '@components/profile/UserProfile';
+import { useAuthContext } from '@context/authContext';
 import { shop } from '@utils/api';
 import { LoaderFunction, redirect, useLoaderData } from 'react-router-dom';
 
@@ -11,22 +12,15 @@ interface User {
 }
 
 export const userLoader: LoaderFunction = async () => {
-	const token = localStorage.getItem('token');
+	const user = JSON.parse(localStorage.getItem('user') as string);
 
-	if (!token) {
+	if (!user.token) {
 		return redirect('/login');
 	}
-	const res = await shop.get('/user/profile', {
-		headers: {
-			authorization: `Bearer ${token}`,
-		},
-	});
-
-	return res.data;
 };
 
 const UserPage = () => {
-	const user = useLoaderData() as User;
+	const { user } = useAuthContext();
 
 	return <>{user.isAdmin ? <AdminProfile /> : <UserProfile />}</>;
 };

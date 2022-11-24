@@ -1,18 +1,18 @@
 import ErrorComponent from '@components/Error';
-import Login from '@components/Login';
-import Logout from '@components/Logout';
-import Signup, { signupAction } from '@components/Signup';
+import Login from '@pages/login';
+import Logout from '@components/userSign/Logout';
+import Signup, { signupAction } from '@pages/signup';
 import EmailSent from '@pages/email-sent';
 import ForgetPassword from '@pages/forgetPassword';
-import UserProfile, { userLoader } from '@pages/userProfile';
+import UserProfile, { userLoader } from '@pages/user/userProfile';
 import VerifySecNum from '@pages/verify-secNum';
 import { RouteObject } from 'react-router-dom';
+import Favorites, { favLoader } from '@pages/user/favorites';
 
 export const userSignRoutes: RouteObject[] = [
 	{
 		path: '/login',
 		element: <Login />,
-		errorElement: <ErrorComponent />,
 	},
 	{
 		path: '/signup',
@@ -26,24 +26,30 @@ export const userSignRoutes: RouteObject[] = [
 		errorElement: <ErrorComponent />,
 	},
 	{
-		path: '/user/email-sent',
+		path: '/email-sent',
 		element: <EmailSent />,
 		errorElement: <ErrorComponent />,
 	},
 	{
-		path: '/user/profile',
+		path: '/user/profile/:id',
 		element: <UserProfile />,
 		loader: userLoader,
 		errorElement: <ErrorComponent />,
 	},
 	{
-		path: '/user/password-reset',
+		path: '/password-reset',
 		element: <ForgetPassword />,
 		errorElement: <ErrorComponent />,
 	},
 	{
-		path: '/user/verify-secNum',
+		path: '/verify-secNum',
 		element: <VerifySecNum />,
+		errorElement: <ErrorComponent />,
+	},
+	{
+		path: '/user/profile/:id/favorites',
+		element: <Favorites />,
+		loader: favLoader,
 		errorElement: <ErrorComponent />,
 	},
 ];

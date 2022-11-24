@@ -11,14 +11,17 @@ export const productsLoader: LoaderFunction = async () => {
 
 const Home = () => {
 	const products = useLoaderData() as ProductType<string>[];
-	const token = window.localStorage.getItem('token');
+	const { user } = useAuthContext();
 
 	return (
 		<div>
 			Home
 			<div>
-				{token ? (
-					<Link to="/logout">Logout</Link>
+				{user.token ? (
+					<>
+						<Link to="/logout">Logout</Link>
+						<Link to={`/user/profile/${user.id}`}>User Profile</Link>
+					</>
 				) : (
 					<>
 						<Link to="/login">Login</Link>

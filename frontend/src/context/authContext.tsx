@@ -7,41 +7,67 @@ import {
 	useCallback,
 } from 'react';
 
-interface ContextAuth {
+interface User {
 	token: string | null;
-	setToken: (token: string | null) => void;
+	id: string | null;
+	name: string | null;
+	isAdmin: boolean | null;
+}
+
+interface ContextAuth {
+	user: User;
+	setUser: (user: User) => void;
 }
 
 interface AuthContextProviderProps {
 	children: ReactNode;
 }
 
-const AuthContext = createContext<ContextAuth>({
+export const initialState = {
 	token: null,
-	setToken: () => {},
+	id: null,
+	isAdmin: null,
+	name: null,
+};
+
+const AuthContext = createContext<ContextAuth>({
+	user: initialState,
+	setUser: () => {},
 });
 
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
-	const [token, setState] = useState(() => {
-		return localStorage.getItem('token') ? localStorage.getItem('token') : null;
+	const [user, setState] = useState(() => {
+		const initialStateFromLS = JSON.parse(
+			localStorage.getItem('user') as string
+		);
+
+		if (!initialStateFromLS) {
+			const stringifiedUser = JSON.stringify(initialState);
+			window.localStorage.setItem('user', stringifiedUser);
+			return initialState;
+		} else {
+			return initialStateFromLS;
+		}
 	});
 
-	const setToken = useCallback(
-		(token: string | null) => {
-			setState(token);
+	const setUser = useCallback(
+		(user: User) => {
+			setState(user);
 
-			if (token === null) {
-				window.localStorage.removeItem('token');
+			if (user.token === null) {
+				const stringifiedUser = JSON.stringify(initialState);
+				window.localStorage.setItem('user', stringifiedUser);
 			} else {
-				window.localStorage.setItem('token', String(token));
+				const stringifiedUser = JSON.stringify(user);
+				window.localStorage.setItem('user', stringifiedUser);
 			}
 		},
-		[token]
+		[user]
 	);
 
 	const contextValue = useMemo(() => {
-		return { token, setToken };
-	}, [token, setToken]);
+		return { user, setUser };
+	}, [user, setUser]);
 
 	return (
 		<AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
