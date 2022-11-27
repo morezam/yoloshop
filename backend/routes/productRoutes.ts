@@ -18,7 +18,7 @@ router.route('/').get(getProducts);
 router.route('/').post(protect, createProduct);
 
 router.route('/:id').get(getProductById);
-router.route('/:id').patch(protect, updateProduct);
+router.route('/:id').put(protect, updateProduct);
 router.route('/:id').delete(protect, deleteProduct);
 
 router.route('/:id/comments').post(protect, createProductComment);

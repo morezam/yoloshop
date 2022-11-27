@@ -22,8 +22,8 @@ app.use('/user', userRoutes);
 app.use('/orders', orderRoutes);
 app.use('/upload', uploadRoutes);
 
-const __variableOfChoice = path.resolve();
-app.use('/uploads', express.static(path.join(__variableOfChoice, '/uploads')));
+const __customDirName = path.resolve();
+app.use('/uploads', express.static(path.join(__customDirName, '/uploads')));
 
 app.use(notFound);
 app.use(errorHandler);

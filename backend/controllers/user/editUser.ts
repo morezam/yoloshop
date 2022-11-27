@@ -97,7 +97,7 @@ export const updateUser = async (
 				next(err);
 				return;
 			}
-			res.send('user successfully updated');
+			res.send('User successfully updated');
 		});
 	} catch (error) {
 		res.status(500);

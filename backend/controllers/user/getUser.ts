@@ -36,6 +36,7 @@ export const getAllUsers = async (
 	next: NextFunction
 ) => {
 	const isAdmin = req.user.isAdmin;
+	const pageFromReq = req.query.page;
 
 	if (!isAdmin) {
 		res.status(401);
@@ -43,10 +44,20 @@ export const getAllUsers = async (
 		return;
 	}
 
-	try {
-		const users = await User.find({}).select('-password');
+	const perPage = 10;
+	const page = pageFromReq ? +pageFromReq - 1 : 0;
 
-		res.json(users);
+	try {
+		const users = await User.find({})
+			.select('-password')
+			.limit(perPage)
+			.skip(perPage * page);
+
+		const count = await User.count({});
+
+		const pages = Math.ceil(count / perPage);
+
+		res.json({ users, page: pageFromReq, pages });
 	} catch (error) {
 		res.status(500);
 		next(error);

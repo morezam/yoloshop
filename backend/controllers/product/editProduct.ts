@@ -1,5 +1,7 @@
+import fs from 'fs';
 import { NextFunction, Request, Response } from 'express';
 import { Product } from '@models/productModel';
+import path from 'path';
 
 export const createProduct = async (
 	req: Request,
@@ -75,12 +77,24 @@ export const deleteProduct = async (
 	next: NextFunction
 ) => {
 	const { id } = req.params;
+	const { image } = req.query;
 
 	if (!req.user.isAdmin) {
 		res.status(401);
 		next(new Error('To delete a product you must be admin.'));
 		return;
 	}
+	const __customDirName = path.resolve();
+
+	fs.unlink(path.join(__customDirName, `/${image}`), function (err) {
+		if (err) {
+			res.status(500);
+			next(err);
+			return;
+		} else {
+			console.log('Successfully deleted the file.');
+		}
+	});
 
 	try {
 		await Product.findByIdAndDelete(id);

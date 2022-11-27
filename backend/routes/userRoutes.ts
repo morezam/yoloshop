@@ -32,7 +32,7 @@ router.route('/change-password-login').post(changePasswordFromLogin);
 router.route('/all').get(protect, getAllUsers);
 router.route('/:id').delete(protect, deleteUser);
 router.route('/changePassword').put(protect, changePassword);
-router.route('/:id').patch(protect, updateUser);
+router.route('/:id').put(protect, updateUser);
 
 router.route('/favorites').get(protect, getFavoriteProducts);
 router.route('/favorites').post(protect, setFavoriteProduct);

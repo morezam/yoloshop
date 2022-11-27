@@ -24,7 +24,7 @@ const checkFileType = (
 	const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
 	const mimeType = fileTypes.test(file.mimetype);
 
-	if (extname && mimeType) {
+	if (extName && mimeType) {
 		return callback(null, true);
 	} else {
 		return callback(new Error('Images Only!'));

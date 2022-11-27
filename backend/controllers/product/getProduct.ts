@@ -6,10 +6,19 @@ export const getProducts = async (
 	res: Response,
 	next: NextFunction
 ) => {
+	const pageFromReq = req.query.page;
+	const perPage = 10;
+	const page = pageFromReq ? +pageFromReq - 1 : 0;
 	try {
-		const products = await Product.find({});
+		const products = await Product.find({})
+			.limit(perPage)
+			.skip(perPage * page);
 
-		res.json(products);
+		const count = await Product.count({});
+
+		const pages = Math.ceil(count / perPage);
+
+		res.json({ products, page: pageFromReq, pages });
 	} catch (error) {
 		res.status(500);
 		next(error);
