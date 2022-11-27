@@ -1,8 +1,7 @@
-import AdminProfile from '@components/profile/AdminProfile';
-import UserProfile from '@components/profile/UserProfile';
+import { LoaderFunction, redirect } from 'react-router-dom';
 import { useAuthContext } from '@context/authContext';
-import { shop } from '@utils/api';
-import { LoaderFunction, redirect, useLoaderData } from 'react-router-dom';
+import AdminProfile from '@components/profile/admin';
+import UserProfile from '@components/profile/UserProfile';
 
 interface User {
 	id: string;

@@ -4,6 +4,7 @@ import { useAuthContext } from '@context/authContext';
 import { useMutation } from '@tanstack/react-query';
 import { shop } from '@utils/api';
 import { AxiosError } from 'axios';
+import { useForm } from 'react-hook-form';
 
 interface LoginResponse {
 	id: string;
@@ -18,6 +19,17 @@ interface ErrorResponse {
 
 const LoginComponent = ({ to }: { to: string }) => {
 	const navigate = useNavigate();
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({
+		defaultValues: {
+			email: '',
+			password: '',
+		},
+		criteriaMode: 'all',
+	});
 	const { setUser } = useAuthContext();
 
 	const mutation = useMutation({
@@ -33,20 +45,34 @@ const LoginComponent = ({ to }: { to: string }) => {
 		},
 	});
 
-	const onFormSubmit = (e: SyntheticEvent) => {
-		e.preventDefault();
-
-		const data = Object.fromEntries(
-			new FormData(e.target as HTMLFormElement)
-		) as any;
+	const onFormSubmit = (data: any) => {
 		mutation.mutate(data);
 	};
 
 	return (
 		<>
-			<form onSubmit={onFormSubmit}>
-				<input type="email" name="email" />
-				<input type="password" name="password" />
+			<form onSubmit={handleSubmit(onFormSubmit)}>
+				<input
+					{...register('email', {
+						// required: true,
+						// pattern: {
+						// 	value: /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/,
+						// 	message: 'Email Is Not Valid',
+						// },
+					})}
+				/>
+
+				<input
+					type="password"
+					{...register('password', {
+						// required: true,
+						// pattern: {
+						// 	value: /^(?=.*\d)(?=.*[a-z])(?=.*[!@#$%^&*]).{8,}$/,
+						// 	message:
+						// 		'Password must be at least 8 characters long with at least one letter and one special character',
+						// },
+					})}
+				/>
 				<button type="submit">Submit</button>
 			</form>
 			<Link to={'/user/password-reset'}>Forgot Your Password?</Link>
