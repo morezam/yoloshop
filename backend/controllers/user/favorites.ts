@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { User } from '@models/userModel';
+import { Product } from '@models/productModel';
 
 export const getFavoriteProducts = async (
 	req: Request,
@@ -9,7 +10,7 @@ export const getFavoriteProducts = async (
 	const userId = req.user._id;
 
 	try {
-		const user = await User.findById(userId);
+		const user = await User.findById(userId).populate('favorites', 'name ');
 
 		if (!user) {
 			res.status(404);
@@ -32,10 +33,12 @@ export const setFavoriteProduct = async (
 ) => {
 	const userId = req.user._id;
 
-	const { prodId, name } = req.body;
+	const { prodId } = req.body;
 
 	try {
-		const user = await User.findById(userId);
+		const user = await User.findById(userId).populate('favorites', 'name');
+
+		const product = await Product.findById(prodId);
 
 		if (!user) {
 			res.status(404);
@@ -53,10 +56,8 @@ export const setFavoriteProduct = async (
 			return;
 		}
 
-		user.favorites.push({
-			name,
-			_id: prodId,
-		});
+		user.favorites.push(prodId);
+		product.addedToFavs = product.addedToFavs + 1;
 
 		user.save(function (err) {
 			if (err) {
@@ -66,6 +67,8 @@ export const setFavoriteProduct = async (
 			}
 			res.send('Product added to favorites');
 		});
+
+		product.save();
 	} catch (error) {
 		res.status(500);
 		next(error);
@@ -83,7 +86,7 @@ export const deleteFavoriteProduct = async (
 	const { prodId } = req.params;
 
 	try {
-		const user = await User.findById(userId);
+		const user = await User.findById(userId).populate('favorites');
 
 		if (!user) {
 			res.status(404);

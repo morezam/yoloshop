@@ -50,11 +50,49 @@ export const productSchema = new mongoose.Schema<IProduct>(
 			required: true,
 			default: 0,
 		},
-		comments: [commentSchema],
+		comments: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				required: true,
+				ref: 'Comment',
+			},
+		],
+		addedToFavs: {
+			type: Number,
+			required: true,
+			default: 0,
+		},
+		purchasedNum: {
+			type: Number,
+			required: true,
+			default: 0,
+		},
+		viewedNum: {
+			type: Number,
+			required: true,
+			default: 0,
+		},
 	},
 	{
 		timestamps: true,
 	}
 );
+
+productSchema.pre('save', function (next) {
+	const product = this;
+
+	if (!product.comments) {
+		next();
+	}
+
+	product.numComments = product.comments.length;
+	const avRating =
+		product.comments.reduce((acc, item) => item.rating + acc, 0) /
+		product.comments.length;
+
+	product.rating = +avRating.toFixed(1);
+
+	next();
+});
 
 export const Product = mongoose.model('Product', productSchema);

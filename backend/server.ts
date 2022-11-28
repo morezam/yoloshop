@@ -6,6 +6,7 @@ import { dbConnect } from './utils/dbConnect';
 import productRoutes from './routes/productRoutes';
 import userRoutes from './routes/userRoutes';
 import orderRoutes from './routes/orderRoutes';
+import commentRoutes from './routes/commentRoutes';
 import uploadRoutes from './routes/uploadRoutes';
 import { notFound, errorHandler } from './middleware/errorMiddleware';
 
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use('/products', productRoutes);
 app.use('/user', userRoutes);
 app.use('/orders', orderRoutes);
+app.use('/comments', commentRoutes);
 app.use('/upload', uploadRoutes);
 
 const __customDirName = path.resolve();

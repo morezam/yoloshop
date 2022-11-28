@@ -13,6 +13,9 @@ export interface ProductType<T> {
 	category: string;
 	numComments: number;
 	comments: CommentType<T>[];
+	addedToFavs: number;
+	purchasedNum: number;
+	viewedNum: number;
 }
 
 export interface CommentType<T> {
@@ -23,6 +26,12 @@ export interface CommentType<T> {
 	like?: number;
 	disLike?: number;
 	userName: string;
+	edited: boolean;
+	product: T;
+	votedUsers: {
+		_id: string;
+		like: boolean;
+	}[];
 }
 
 export interface UserType {

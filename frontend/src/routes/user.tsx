@@ -8,6 +8,8 @@ import UserProfile, { userLoader } from '@pages/user/userProfile';
 import VerifySecNum from '@pages/verify-secNum';
 import { RouteObject } from 'react-router-dom';
 import Favorites, { favLoader } from '@pages/user/favorites';
+import CustomErrorBoundary from '@components/CustomErrorBoundary';
+import Comments from '@components/comment/CommentsInProfile';
 
 export const userSignRoutes: RouteObject[] = [
 	{
@@ -50,6 +52,11 @@ export const userSignRoutes: RouteObject[] = [
 		path: '/user/profile/:id/favorites',
 		element: <Favorites />,
 		loader: favLoader,
+		errorElement: <ErrorComponent />,
+	},
+	{
+		path: '/user/profile/:id/comments',
+		element: <Comments />,
 		errorElement: <ErrorComponent />,
 	},
 ];

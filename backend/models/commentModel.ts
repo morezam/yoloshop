@@ -18,6 +18,11 @@ export const commentSchema = new mongoose.Schema<IComment>(
 			ref: 'User',
 			required: true,
 		},
+		product: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Product',
+			required: true,
+		},
 		text: {
 			type: String,
 			required: true,
@@ -30,8 +35,21 @@ export const commentSchema = new mongoose.Schema<IComment>(
 			type: Number,
 			default: 0,
 		},
+		edited: {
+			type: Boolean,
+			required: true,
+			default: false,
+		},
+		votedUsers: [
+			{
+				_id: String,
+				like: Boolean,
+			},
+		],
 	},
 	{
 		timestamps: true,
 	}
 );
+
+export const Comment = mongoose.model('Comment', commentSchema);

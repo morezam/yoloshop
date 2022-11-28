@@ -2,7 +2,7 @@ import { LoaderFunction } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { shop } from '@utils/api';
 import { queryClient } from '@utils/queryClient';
-import ProductComponent from '@components/profile/admin/ProductComponent';
+import ProductComponent from '@components/adminProfile/ProductComponent';
 import { ProductType } from '@types';
 import { useState } from 'react';
 

@@ -41,7 +41,16 @@ export const getProductById = async (
 			return;
 		}
 
-		res.json(product);
+		product.viewedNum = product.viewedNum + 1;
+
+		product.save(function (err) {
+			if (err) {
+				res.status(500);
+				next(err);
+				return;
+			}
+			res.json(product);
+		});
 	} catch (error) {
 		res.status(500);
 		next(error);

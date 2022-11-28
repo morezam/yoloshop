@@ -7,6 +7,7 @@ const UserProfile = () => {
 		<div>
 			UserProfile
 			<Link to={`/user/profile/${user.id}/favorites`}>Favorites</Link>
+			<Link to={`/user/profile/${user.id}/comments`}>Comments</Link>
 		</div>
 	);
 };

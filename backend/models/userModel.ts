@@ -25,8 +25,8 @@ export const userSchema = new mongoose.Schema<IUser>(
 		},
 		favorites: [
 			{
-				prodId: String,
-				name: String,
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Product',
 			},
 		],
 		isAdmin: {

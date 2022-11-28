@@ -4,6 +4,7 @@ import CreateProduct from '@pages/admin/createProduct';
 import AllUsers from '@pages/admin/allUsers';
 import AllOrders from '@pages/admin/allOrders';
 import ProductDetails, { productLoader } from '@pages/admin/productDetails';
+import Comments from '@components/comment/CommentsInProfile';
 
 export const adminRoutes: RouteObject[] = [
 	{
@@ -26,5 +27,9 @@ export const adminRoutes: RouteObject[] = [
 	{
 		path: '/user/profile/allOrders',
 		element: <AllOrders />,
+	},
+	{
+		path: '/user/profile/comments',
+		element: <Comments />,
 	},
 ];

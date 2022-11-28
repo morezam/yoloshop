@@ -1,5 +1,6 @@
-import { SyntheticEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useErrorHandler } from 'react-error-boundary';
+import CustomErrorBoundary from '@components/CustomErrorBoundary';
 import { useAuthContext } from '@context/authContext';
 import { useMutation } from '@tanstack/react-query';
 import { shop } from '@utils/api';
@@ -31,6 +32,7 @@ const LoginComponent = ({ to }: { to: string }) => {
 		criteriaMode: 'all',
 	});
 	const { setUser } = useAuthContext();
+	const handleError = useErrorHandler();
 
 	const mutation = useMutation({
 		mutationFn: data => {
@@ -41,7 +43,7 @@ const LoginComponent = ({ to }: { to: string }) => {
 			to === '' ? navigate('/') : navigate(`/${to.slice(1)}`);
 		},
 		onError(error: AxiosError<ErrorResponse>) {
-			console.log(error.response?.data.message);
+			handleError(error.response?.data);
 		},
 	});
 

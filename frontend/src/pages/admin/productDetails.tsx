@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { shop } from '@utils/api';
 import { queryClient } from '@utils/queryClient';
 import { ProductType } from '@types';
-import ProductDetailsComponent from '@components/profile/admin/ProductDetailsComponent';
+import ProductDetailsComponent from '@components/adminProfile/ProductDetailsComponent';
 import DeleteProduct from '@components/product/DeleteProduct';
 
 const getProductDetails = (id: string) => ({
