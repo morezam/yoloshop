@@ -10,7 +10,10 @@ export const getFavoriteProducts = async (
 	const userId = req.user._id;
 
 	try {
-		const user = await User.findById(userId).populate('favorites', 'name ');
+		const user = await User.findById(userId).populate(
+			'favorites',
+			'name image'
+		);
 
 		if (!user) {
 			res.status(404);
@@ -36,7 +39,7 @@ export const setFavoriteProduct = async (
 	const { prodId } = req.body;
 
 	try {
-		const user = await User.findById(userId).populate('favorites', 'name');
+		const user = await User.findById(userId);
 
 		const product = await Product.findById(prodId);
 
@@ -46,14 +49,16 @@ export const setFavoriteProduct = async (
 			return;
 		}
 
-		const favAlreadyExist = user.favorites.find(
-			f => f._id.toString() === prodId
-		);
+		if (user.favorites) {
+			const favAlreadyExist = user.favorites.find(
+				f => f._id.toString() === prodId
+			);
 
-		if (favAlreadyExist) {
-			res.status(500);
-			next(new Error('This product is already in your favorites list'));
-			return;
+			if (favAlreadyExist) {
+				res.status(500);
+				next(new Error('This product is already in your favorites list'));
+				return;
+			}
 		}
 
 		user.favorites.push(prodId);
@@ -87,6 +92,7 @@ export const deleteFavoriteProduct = async (
 
 	try {
 		const user = await User.findById(userId).populate('favorites');
+		const product = await Product.findById(prodId);
 
 		if (!user) {
 			res.status(404);
@@ -104,6 +110,7 @@ export const deleteFavoriteProduct = async (
 		const filteredFav = user.favorites.filter(f => f._id.toString() !== prodId);
 
 		user.favorites = filteredFav;
+		product.addedToFavs = product.addedToFavs - 1;
 
 		user.save(function (err) {
 			if (err) {
@@ -113,6 +120,7 @@ export const deleteFavoriteProduct = async (
 			}
 			res.send('Product deleted from favorites');
 		});
+		product.save();
 	} catch (error) {
 		res.status(500);
 		next(error);

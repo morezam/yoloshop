@@ -1,14 +1,16 @@
-import { LoaderFunction, useParams } from 'react-router-dom';
+import { LoaderFunction } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { shop } from '@utils/api';
 import { queryClient } from '@utils/queryClient';
 import { useAuthContext } from '@context/authContext';
-import UserFavorites from '@components/user/UserFavorites';
+import ShowFavorites, { Favorite } from '@components/favorites/ShowFavorites';
+import { useMemo, useState } from 'react';
+import Pagination from '@components/pagination';
 
-const getFavProducts = (id: string, token: string) => ({
-	queryKey: ['userFaves', id],
+export const getFavProducts = (token: string) => ({
+	queryKey: ['favorites'],
 	queryFn: async () => {
-		return shop.get('/user/favorites', {
+		return shop.get<Favorite[]>(`/user/favorites`, {
 			headers: {
 				authorization: `Bearer ${token}`,
 			},
@@ -16,9 +18,9 @@ const getFavProducts = (id: string, token: string) => ({
 	},
 });
 
-export const favLoader: LoaderFunction = async ({ params }) => {
+export const favLoader: LoaderFunction = async () => {
 	const user = JSON.parse(window.localStorage.getItem('user') as string);
-	const query = getFavProducts(params.id as string, user.token);
+	const query = getFavProducts(user.token);
 
 	return (
 		queryClient.getQueryData(query.queryKey) ??
@@ -27,13 +29,39 @@ export const favLoader: LoaderFunction = async ({ params }) => {
 };
 
 const Favorites = () => {
-	const params = useParams();
+	const [page, setPage] = useState(1);
+	const [limit, setLimit] = useState(10);
 	const { user } = useAuthContext();
-	const { data: favs } = useQuery(
-		getFavProducts(params.id as string, user.token as string)
-	);
+	const { data: favs } = useQuery(getFavProducts(user.token as string));
 
-	return <UserFavorites favs={favs?.data} />;
+	const count = favs?.data.length;
+	const pages = Math.ceil((count as number) / limit);
+
+	const currentFavData = useMemo(() => {
+		const firstPageIndex = (page - 1) * limit;
+		const lastPageIndex = firstPageIndex + limit;
+		return favs?.data.slice(firstPageIndex, lastPageIndex);
+	}, [page, favs?.data]);
+
+	return (
+		<>
+			{currentFavData ? (
+				currentFavData.length !== 0 ? (
+					<>
+						<ShowFavorites favorites={currentFavData} />
+						<Pagination
+							currentPage={page}
+							totalPageCount={pages}
+							pageSize={limit}
+							onPageChange={page => setPage(page as number)}
+						/>
+					</>
+				) : (
+					<div>You have no Favorite products</div>
+				)
+			) : null}
+		</>
+	);
 };
 
 export default Favorites;

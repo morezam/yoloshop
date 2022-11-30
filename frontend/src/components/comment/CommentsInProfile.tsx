@@ -2,7 +2,6 @@ import { useAuthContext } from '@context/authContext';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { CommentType } from '@types';
 import { shop } from '@utils/api';
-import { queryClient } from '@utils/queryClient';
 import { useState } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { Link } from 'react-router-dom';

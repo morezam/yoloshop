@@ -6,6 +6,7 @@ import { useAuthContext } from '@context/authContext';
 import UserComponent from '@components/user/UserComponent';
 import { UserType } from '@types';
 import { useState } from 'react';
+import Pagination from '@components/pagination';
 
 const getAllUsers = (token: string) => ({
 	queryKey: ['users'],
@@ -41,14 +42,12 @@ interface ResponseData {
 const AllUsers = () => {
 	const { user } = useAuthContext();
 	const [page, setPage] = useState(1);
-	// const { data } = useQuery(getAllUsers(user.token as string), {
-	// 	keepPreviousData: true
-	// });
+	const [limit, setLimit] = useState(15);
 
 	const { data } = useQuery({
 		queryKey: ['users', page],
 		queryFn: async () => {
-			return shop.get<ResponseData>(`/user/all?page=${page}`, {
+			return shop.get<ResponseData>(`/user/all?page=${page}&limit=${limit}`, {
 				headers: {
 					authorization: `Bearer ${user.token}`,
 				},
@@ -61,21 +60,23 @@ const AllUsers = () => {
 
 	return (
 		<>
-			<ul>
-				{users
-					? users.map(user => {
-							return <UserComponent key={user._id} user={user} />;
-					  })
-					: null}
-			</ul>
-			{[...Array(data?.data.pages).keys()].map(num => (
-				<button
-					disabled={num + 1 === page}
-					key={num}
-					onClick={() => setPage(num + 1)}>
-					{num + 1}
-				</button>
-			))}
+			{data ? (
+				<>
+					<ul>
+						{users
+							? users.map(user => {
+									return <UserComponent key={user._id} user={user} />;
+							  })
+							: null}
+					</ul>
+					<Pagination
+						currentPage={page}
+						totalPageCount={data.data.pages}
+						pageSize={20}
+						onPageChange={page => setPage(page as number)}
+					/>
+				</>
+			) : null}
 		</>
 	);
 };

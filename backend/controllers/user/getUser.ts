@@ -37,6 +37,9 @@ export const getAllUsers = async (
 ) => {
 	const isAdmin = req.user.isAdmin;
 	const pageFromReq = req.query.page;
+	const perPage = req.query.limit ? +req.query.limit : 10;
+
+	console.log(req.query);
 
 	if (!isAdmin) {
 		res.status(401);
@@ -44,7 +47,6 @@ export const getAllUsers = async (
 		return;
 	}
 
-	const perPage = 10;
 	const page = pageFromReq ? +pageFromReq - 1 : 0;
 
 	try {
