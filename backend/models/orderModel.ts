@@ -1,6 +1,9 @@
+import { OrderType } from '@types';
 import mongoose from 'mongoose';
 
-export const orderSchema = new mongoose.Schema(
+type IOrder = Document & OrderType<mongoose.Schema.Types.ObjectId>;
+
+export const orderSchema = new mongoose.Schema<IOrder>(
 	{
 		user: {
 			type: mongoose.Schema.Types.ObjectId,

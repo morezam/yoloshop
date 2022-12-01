@@ -6,6 +6,7 @@ import { queryClient } from '@utils/queryClient';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import CustomErrorBoundary from '@components/CustomErrorBoundary';
+import { useOrderContext } from '@context/orderContext';
 
 interface PaginatedProducts {
 	page: number;
@@ -33,12 +34,14 @@ const Home = () => {
 	const [page, setPage] = useState(1);
 	const { data } = useQuery(getProducts(page));
 	const { user } = useAuthContext();
+	const { order } = useOrderContext();
 
 	return (
 		<div>
 			Home
 			<CustomErrorBoundary>
 				<div>
+					<Link to={`/cart`}>in cart {order.items?.length}</Link>
 					{user.token ? (
 						<>
 							<Link to="/logout">Logout</Link>

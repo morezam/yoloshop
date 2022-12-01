@@ -40,7 +40,10 @@ const LoginComponent = ({ to }: { to: string }) => {
 		},
 		onSuccess(data) {
 			setUser(data.data);
-			to === '' ? navigate('/') : navigate(`/${to.slice(1)}`);
+
+			const query = to.split('=')[1];
+			const redirect = query ? `/${query}` : '/';
+			navigate(redirect);
 		},
 		onError(error: AxiosError<ErrorResponse>) {
 			handleError(error.response?.data);

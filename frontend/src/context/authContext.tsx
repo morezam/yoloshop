@@ -1,11 +1,5 @@
-import {
-	createContext,
-	useMemo,
-	useContext,
-	useState,
-	ReactNode,
-	useCallback,
-} from 'react';
+import { createContext, useMemo, useContext, ReactNode } from 'react';
+import { useLocalStorage } from 'src/hooks/useLocalStorage';
 
 interface User {
 	token: string | null;
@@ -16,7 +10,7 @@ interface User {
 
 interface ContextAuth {
 	user: User;
-	setUser: (user: User) => void;
+	setUser: (user: any) => void;
 }
 
 interface AuthContextProviderProps {
@@ -36,34 +30,7 @@ const AuthContext = createContext<ContextAuth>({
 });
 
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
-	const [user, setState] = useState(() => {
-		const initialStateFromLS = JSON.parse(
-			localStorage.getItem('user') as string
-		);
-
-		if (!initialStateFromLS) {
-			const stringifiedUser = JSON.stringify(initialState);
-			window.localStorage.setItem('user', stringifiedUser);
-			return initialState;
-		} else {
-			return initialStateFromLS;
-		}
-	});
-
-	const setUser = useCallback(
-		(user: User) => {
-			setState(user);
-
-			if (user.token === null) {
-				const stringifiedUser = JSON.stringify(initialState);
-				window.localStorage.setItem('user', stringifiedUser);
-			} else {
-				const stringifiedUser = JSON.stringify(user);
-				window.localStorage.setItem('user', stringifiedUser);
-			}
-		},
-		[user]
-	);
+	const [user, setUser] = useLocalStorage('user', initialState);
 
 	const contextValue = useMemo(() => {
 		return { user, setUser };

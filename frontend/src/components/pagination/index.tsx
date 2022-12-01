@@ -6,7 +6,7 @@ import {
 import './style.css';
 
 interface PaginationProps extends UsePaginationProps {
-	onPageChange: (page: string | number) => void;
+	onPageChange: (page: number) => void;
 }
 
 const Pagination = (props: PaginationProps) => {
@@ -57,7 +57,7 @@ const Pagination = (props: PaginationProps) => {
 						className={`pagination-item ${
 							pageNumber === currentPage ? 'selected' : 'null'
 						}`}
-						onClick={() => onPageChange(pageNumber)}>
+						onClick={() => onPageChange(+pageNumber)}>
 						{pageNumber}
 					</li>
 				);

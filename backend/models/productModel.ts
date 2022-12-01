@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { commentSchema } from './commentModel';
 import { ProductType } from '@types';
 
 type IProduct = Document & ProductType<mongoose.Schema.Types.ObjectId>;

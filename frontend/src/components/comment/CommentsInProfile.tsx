@@ -1,3 +1,4 @@
+import Pagination from '@components/pagination';
 import { useAuthContext } from '@context/authContext';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { CommentType } from '@types';
@@ -75,14 +76,20 @@ const Comments = () => {
 								);
 							})}
 						</ul>
-						{[...Array(data?.data.pages).keys()].map(num => (
+						<Pagination
+							currentPage={page}
+							pageSize={10}
+							totalPageCount={data.data.pages}
+							onPageChange={page => setPage(page)}
+						/>
+						{/* {[...Array(data.data.pages).keys()].map(num => (
 							<button
 								disabled={num + 1 === page}
 								key={num}
 								onClick={() => setPage(num + 1)}>
 								{num + 1}
 							</button>
-						))}
+						))} */}
 					</>
 				)
 			) : null}

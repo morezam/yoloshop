@@ -6,6 +6,7 @@ import { AuthContextProvider } from '@context/authContext';
 import { routes } from '@routes/index';
 import { queryClient } from '@utils/queryClient';
 import './index.css';
+import { OrderContextProvider } from '@context/orderContext';
 
 const router = createBrowserRouter(routes);
 
@@ -13,10 +14,12 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<React.StrictMode>
 		<QueryClientProvider client={queryClient}>
 			<AuthContextProvider>
-				<RouterProvider
-					router={router}
-					fallbackElement={<div>Loading...</div>}
-				/>
+				<OrderContextProvider>
+					<RouterProvider
+						router={router}
+						fallbackElement={<div>Loading...</div>}
+					/>
+				</OrderContextProvider>
 			</AuthContextProvider>
 		</QueryClientProvider>
 	</React.StrictMode>
