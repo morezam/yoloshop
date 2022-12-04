@@ -1,15 +1,16 @@
 import { createContext, useMemo, useContext, ReactNode } from 'react';
 import { useLocalStorage } from '@hooks/useLocalStorage';
 
-interface CartItem {
+export interface CartItem {
 	name: string;
-	_id: string;
-	quantity: number;
+	product: string;
+	qty: number;
+	countInStock: number;
 	price: number;
 	image: string;
 }
 
-interface Address {
+export interface Address {
 	city: string;
 	postalCode: string;
 	address: string;

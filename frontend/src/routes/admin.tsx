@@ -2,9 +2,9 @@ import { RouteObject } from 'react-router-dom';
 import Products from '@pages/admin/allProducts';
 import CreateProduct from '@pages/admin/createProduct';
 import AllUsers from '@pages/admin/allUsers';
-import AllOrders from '@pages/admin/allOrders';
 import ProductDetails, { productLoader } from '@pages/admin/productDetails';
-import Comments from '@components/comment/CommentsInProfile';
+import AllComments from '@pages/admin/comments';
+import AllOrders from '@pages/admin/orders';
 
 export const adminRoutes: RouteObject[] = [
 	{
@@ -25,11 +25,11 @@ export const adminRoutes: RouteObject[] = [
 		element: <AllUsers />,
 	},
 	{
-		path: '/user/profile/allOrders',
-		element: <AllOrders />,
+		path: '/user/profile/comments',
+		element: <AllComments />,
 	},
 	{
-		path: '/user/profile/comments',
-		element: <Comments />,
+		path: '/user/profile/orders',
+		element: <AllOrders />,
 	},
 ];

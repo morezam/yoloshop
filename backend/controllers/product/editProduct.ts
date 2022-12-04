@@ -8,7 +8,7 @@ export const createProduct = async (
 	res: Response,
 	next: NextFunction
 ) => {
-	const { name, price, quantity, description, image, brand, category } =
+	const { name, price, countInStock, description, image, brand, category } =
 		req.body;
 
 	if (!req.user.isAdmin) {
@@ -21,7 +21,7 @@ export const createProduct = async (
 		const newProduct = await Product.create({
 			name,
 			price,
-			quantity,
+			countInStock,
 			description,
 			image,
 			brand,
@@ -43,7 +43,7 @@ export const updateProduct = async (
 	next: NextFunction
 ) => {
 	const { id } = req.params;
-	const { name, price, quantity, description, image, brand, category } =
+	const { name, price, countInStock, description, image, brand, category } =
 		req.body;
 
 	if (!req.user.isAdmin) {
@@ -56,7 +56,7 @@ export const updateProduct = async (
 		await Product.findByIdAndUpdate(id, {
 			name,
 			price,
-			quantity,
+			countInStock,
 			description,
 			image,
 			brand,

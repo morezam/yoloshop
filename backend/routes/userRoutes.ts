@@ -1,21 +1,28 @@
 import express from 'express';
+import { protect } from '@middleware/authMiddleware';
 import {
-	userRegister,
-	userLogin,
-	getUserProfile,
-	getAllUsers,
 	deleteUser,
 	changePassword,
 	updateUser,
+} from '@controllers/user/editUser';
+import {
 	getFavoriteProducts,
 	setFavoriteProduct,
 	deleteFavoriteProduct,
-	userVerify,
+} from '@controllers/user/favorites';
+import {
 	forgetPassword,
 	verifySecurityNumber,
 	changePasswordFromLogin,
-} from '@controllers/user';
-import { protect } from '@middleware/authMiddleware';
+} from '@controllers/user/forgetPass';
+import {
+	getUserProfile,
+	getAllUsers,
+	getUserComments,
+	getUserOrders,
+} from '@controllers/user/getUser';
+import { userRegister, userLogin } from '@controllers/user/userSign';
+import { userVerify } from '@controllers/user/verifyUser';
 
 const router = express.Router();
 
@@ -31,6 +38,8 @@ router.route('/change-password-login').post(changePasswordFromLogin);
 
 router.route('/all').get(protect, getAllUsers);
 router.route('/:id').delete(protect, deleteUser);
+router.route('/:id/comments').get(protect, getUserComments);
+router.route('/:id/orders').get(protect, getUserOrders);
 router.route('/changePassword').put(protect, changePassword);
 router.route('/:id').put(protect, updateUser);
 

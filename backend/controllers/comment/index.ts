@@ -1,14 +1,4 @@
-import { getComments, getCommentsByProductId } from './getComment';
-import {
-	createProductComment,
-	likeComment,
-	deleteProductComment,
-} from './editComment';
+import { getAllComments } from './getComment';
+import { createComment, likeComment, deleteComment } from './editComment';
 
-export {
-	getComments,
-	getCommentsByProductId,
-	createProductComment,
-	likeComment,
-	deleteProductComment,
-};
+export { getAllComments, createComment, likeComment, deleteComment };

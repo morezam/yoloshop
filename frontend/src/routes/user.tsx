@@ -8,7 +8,8 @@ import UserProfile, { userLoader } from '@pages/user/userProfile';
 import VerifySecNum from '@pages/verify-secNum';
 import { RouteObject } from 'react-router-dom';
 import Favorites, { favLoader } from '@pages/user/favorites';
-import Comments from '@components/comment/CommentsInProfile';
+import UserComments from '@pages/user/comments';
+import UserOrders from '@pages/user/orders';
 
 export const userSignRoutes: RouteObject[] = [
 	{
@@ -55,7 +56,12 @@ export const userSignRoutes: RouteObject[] = [
 	},
 	{
 		path: '/user/profile/:id/comments',
-		element: <Comments />,
+		element: <UserComments />,
+		errorElement: <ErrorComponent />,
+	},
+	{
+		path: '/user/profile/:id/orders',
+		element: <UserOrders />,
 		errorElement: <ErrorComponent />,
 	},
 ];

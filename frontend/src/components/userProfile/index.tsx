@@ -8,6 +8,7 @@ const UserProfile = () => {
 			UserProfile
 			<Link to={`/user/profile/${user.id}/favorites`}>Favorites</Link>
 			<Link to={`/user/profile/${user.id}/comments`}>Comments</Link>
+			<Link to={`/user/profile/${user.id}/orders`}>Orders</Link>
 		</div>
 	);
 };

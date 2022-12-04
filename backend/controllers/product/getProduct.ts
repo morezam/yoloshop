@@ -57,3 +57,20 @@ export const getProductById = async (
 		return;
 	}
 };
+
+export const getCommentsByProductId = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	const { id } = req.params;
+	try {
+		const product = await Product.findById(id).populate('comments');
+
+		res.json(product.comments);
+	} catch (error) {
+		res.status(500);
+		next(error);
+		return;
+	}
+};

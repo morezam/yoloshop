@@ -5,6 +5,7 @@ export interface ProductType<T> {
 	name: string;
 	price: number;
 	quantity: number;
+	countInStock: number;
 	user: T;
 	description: string;
 	image: string;
@@ -38,13 +39,15 @@ export interface CommentType<T> {
 	updatedAt: Date;
 }
 
-export interface UserType {
+export interface UserType<T> {
 	_id: string;
 	name: string;
 	email: string;
 	password: string;
 	isAdmin: boolean;
 	isVerified: boolean;
+	comments: CommentType<T>[];
+	orders: T[];
 	favorites: {
 		_id: string;
 		name: string;
@@ -54,6 +57,7 @@ export interface UserType {
 }
 
 export interface OrderType<T> {
+	_id: string;
 	user: T;
 	orderItems: [
 		{

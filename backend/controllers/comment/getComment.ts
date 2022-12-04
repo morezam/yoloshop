@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Comment } from '@models/commentModel';
 
-export const getComments = async (
+export const getAllComments = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
@@ -18,43 +18,22 @@ export const getComments = async (
 	const perPage = 10;
 	const page = pageFromReq ? +pageFromReq - 1 : 0;
 
-	const commentObject = async (id?: string) => {
-		try {
-			const comments = await Comment.find(id ? { user: id } : {})
-				.limit(perPage)
-				.skip(perPage * page);
-
-			const count = await Comment.count(id ? { user: id } : {});
-
-			const pages = Math.ceil(count / perPage);
-
-			return { comments, page: +pageFromReq, pages };
-		} catch (error) {
-			res.status(500);
-			next(error);
-			return;
-		}
-	};
-
-	if (user.isAdmin) {
-		const comments = await commentObject();
-		res.json(comments);
-	} else {
-		const comments = await commentObject(user._id);
-		res.json(comments);
+	if (!user.isAdmin) {
+		res.status(401);
+		next(new Error('You must be admin to see all comments'));
+		return;
 	}
-};
 
-export const getCommentsByProductId = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	const { prodId } = req.params;
 	try {
-		const comments = await Comment.find({ product: prodId });
+		const comments = await Comment.find()
+			.limit(perPage)
+			.skip(perPage * page);
 
-		res.json(comments);
+		const count = await Comment.count();
+
+		const pages = Math.ceil(count / perPage);
+
+		res.json({ comments, page: +pageFromReq, pages });
 	} catch (error) {
 		res.status(500);
 		next(error);

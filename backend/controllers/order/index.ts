@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Order } from '@models/orderModel';
+import { Schema } from 'mongoose';
 
 export const getOrders = async (
 	req: Request,
@@ -7,32 +8,36 @@ export const getOrders = async (
 	next: NextFunction
 ) => {
 	const user = req.user;
+	const pageFromReq = req.query.page;
+	const perPage = 10;
+	const page = pageFromReq ? +pageFromReq - 1 : 0;
+
 	if (!user) {
 		res.status(401);
 		next(new Error('You are not authorized'));
 		return;
 	}
 
-	if (user.isAdmin) {
-		try {
-			const orders = await Order.find({});
+	if (!user.isAdmin) {
+		res.status(401);
+		next(new Error('You must be an admin to see all orders'));
+		return;
+	}
 
-			res.json(orders);
-		} catch (error) {
-			res.status(500);
-			next(error);
-			return;
-		}
-	} else {
-		try {
-			const orders = await Order.find({ user: user._id });
+	try {
+		const orders = await Order.find()
+			.limit(perPage)
+			.skip(perPage * page);
 
-			res.json(orders);
-		} catch (error) {
-			res.status(500);
-			next(error);
-			return;
-		}
+		const count = await Order.count();
+
+		const pages = Math.ceil(count / perPage);
+
+		res.json({ orders, page: +pageFromReq, pages });
+	} catch (error) {
+		res.status(500);
+		next(error);
+		return;
 	}
 };
 
@@ -64,6 +69,7 @@ export const createOrder = async (
 	res: Response,
 	next: NextFunction
 ) => {
+	const user = req.user;
 	const { orderItems, shippingAddress, taxPrice, shippingPrice, totalPrice } =
 		req.body;
 
@@ -74,8 +80,14 @@ export const createOrder = async (
 			taxPrice,
 			shippingPrice,
 			totalPrice,
-			user: req.user._id,
+			user: user._id,
 		});
+
+		const orderId = newOrder._id as unknown as Schema.Types.ObjectId;
+
+		user.orders.push(orderId);
+
+		user.save();
 
 		res.json(newOrder);
 	} catch (error) {
@@ -116,13 +128,18 @@ export const payOrder = async (
 	const id = req.params.id;
 
 	try {
-		const order = (await Order.findById(id).populate(
-			'orderItems',
-			'product'
-		)) as any;
+		const order = await Order.findById(id).populate({
+			path: 'orderItems',
+			populate: {
+				path: 'product',
+				model: 'Product',
+			},
+		});
 
 		order.isPaid = true;
-		order.orderItems.forEach(item => item.product.purchasedNum + 1);
+		order.orderItems.forEach(item => {
+			item.product.purchasedNum = item.product.purchasedNum + 1;
+		});
 
 		order.save(function (err) {
 			if (err) {
@@ -130,7 +147,8 @@ export const payOrder = async (
 				next(err);
 				return;
 			}
-			res.send('paid order successfully');
+			// res.send('paid order successfully');
+			res.json(order);
 		});
 	} catch (error) {
 		res.status(500);
@@ -149,10 +167,7 @@ export const deliverOrder = async (
 	const { isDelivered } = req.body;
 
 	try {
-		const order = (await Order.findById(id).populate(
-			'orderItems',
-			'product'
-		)) as any;
+		const order = await Order.findById(id);
 
 		order.isDelivered = isDelivered;
 

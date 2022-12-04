@@ -2,21 +2,28 @@ import { NextFunction, Request, Response } from 'express';
 import { Product } from '@models/productModel';
 import { Comment } from '@models/commentModel';
 
-export const createProductComment = async (
+export const createComment = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
 ) => {
 	const { rating, text, prodId } = req.body;
+	const user = req.user;
 	try {
 		const product = (await Product.findById(prodId).populate(
 			'comments',
-			'rating user'
+			'user'
 		)) as any;
 
 		if (!product) {
-			res.status(400);
+			res.status(404);
 			next(new Error('No product found'));
+			return;
+		}
+
+		if (!user) {
+			res.status(404);
+			next(new Error('No User found'));
 			return;
 		}
 
@@ -38,10 +45,11 @@ export const createProductComment = async (
 			product: prodId,
 		});
 
-		product.comments.push({
-			_id: newComment._id,
-			rating: newComment.rating,
-		});
+		product.comments.push(newComment._id);
+
+		user.comments.push(newComment._id);
+
+		user.save();
 
 		product.save(function (err) {
 			if (err) {
@@ -58,19 +66,17 @@ export const createProductComment = async (
 	}
 };
 
-export const deleteProductComment = async (
+export const deleteComment = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
 ) => {
 	const { id } = req.params;
+	const user = req.user;
 	const { prodId } = req.body;
 
 	try {
-		const product = (await Product.findById(prodId).populate(
-			'comments',
-			'rating user'
-		)) as any;
+		const product = await Product.findById(prodId);
 
 		const comment = await Comment.findById(id);
 
@@ -80,13 +86,20 @@ export const deleteProductComment = async (
 			return;
 		}
 		if (!product) {
-			// res.status(404);
-			// next(new Error('No product found'));
 			comment.delete();
 			return;
 		}
 
-		product.comments = product.comments.filter(c => c._id.toString() !== id);
+		if (!user.isAdmin) {
+			res.status(401);
+			next(new Error('You must be admin to delete a comment'));
+			return;
+		}
+
+		product.comments = product.comments.filter(c => c.toString() !== id);
+
+		user.comments = user.comments.filter(c => c.toString() !== id);
+		user.save();
 
 		comment.delete();
 
@@ -111,7 +124,8 @@ export const likeComment = async (
 	next: NextFunction
 ) => {
 	const { id } = req.params;
-	const { userId, like } = req.body;
+	const user = req.user;
+	const { like } = req.body;
 
 	try {
 		const comment = await Comment.findById(id);
@@ -133,7 +147,7 @@ export const likeComment = async (
 			});
 		};
 
-		const votedUser = comment.votedUsers.find(user => user._id === userId);
+		const votedUser = comment.votedUsers.find(user => user._id === user._id);
 
 		if (votedUser) {
 			if ((votedUser.like && like) || (!votedUser.like && !like)) {
@@ -157,7 +171,7 @@ export const likeComment = async (
 			}
 		} else {
 			comment.votedUsers.push({
-				_id: userId,
+				_id: user._id,
 				like,
 			});
 

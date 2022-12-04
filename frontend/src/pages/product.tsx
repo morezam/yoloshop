@@ -1,6 +1,6 @@
 import ProductComponent from '@components/product/ProductComponent';
 import { useQuery } from '@tanstack/react-query';
-import { CommentType, ProductType } from '@types';
+import { ProductType } from '@types';
 import { shop } from '@utils/api';
 import { queryClient } from '@utils/queryClient';
 import { lazy, Suspense } from 'react';

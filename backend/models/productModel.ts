@@ -23,6 +23,10 @@ export const productSchema = new mongoose.Schema<IProduct>(
 			required: true,
 			default: 0,
 		},
+		countInStock: {
+			type: Number,
+			required: true,
+		},
 		description: {
 			type: String,
 			required: true,
@@ -52,8 +56,8 @@ export const productSchema = new mongoose.Schema<IProduct>(
 		comments: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
-				required: true,
 				ref: 'Comment',
+				required: true,
 			},
 		],
 		addedToFavs: {
@@ -77,8 +81,8 @@ export const productSchema = new mongoose.Schema<IProduct>(
 	}
 );
 
-productSchema.pre('save', function (next) {
-	const product = this;
+productSchema.pre('save', async function (next) {
+	const product = await this.populate('comments', 'rating');
 
 	if (!product.comments) {
 		next();

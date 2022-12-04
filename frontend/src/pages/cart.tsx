@@ -9,7 +9,7 @@ const Cart = () => {
 	const deleteFromCard = (id: string) => {
 		setOrder(oldOrder => ({
 			address: oldOrder.address,
-			items: oldOrder.items?.filter(c => c._id !== id),
+			items: oldOrder.items?.filter(c => c.product !== id),
 		}));
 	};
 
@@ -21,9 +21,12 @@ const Cart = () => {
 				<>
 					<ul>
 						{order.items?.map(item => (
-							<li key={item._id}>
-								<Link to={`/product/${item._id}`}>{item.name}</Link>
-								<button onClick={() => deleteFromCard(item._id)}>
+							<li key={item.product}>
+								<Link to={`/product/${item.product}`}>
+									{item.name} qty: {item.qty}
+								</Link>
+
+								<button onClick={() => deleteFromCard(item.product)}>
 									Delete From Cart
 								</button>
 							</li>

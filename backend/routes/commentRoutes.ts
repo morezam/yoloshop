@@ -1,22 +1,17 @@
 import express from 'express';
-
 import {
-	createProductComment,
-	deleteProductComment,
-	getCommentsByProductId,
-	getComments,
+	createComment,
+	deleteComment,
+	getAllComments,
 	likeComment,
 } from '@controllers/comment';
 import { protect } from '@middleware/authMiddleware';
 
 const router = express.Router();
 
-router.route('/').get(protect, getComments);
-router.route('/:prodId').get(getCommentsByProductId);
-router.route('/').post(protect, createProductComment);
+router.route('/').get(protect, getAllComments);
+router.route('/').post(protect, createComment);
 router.route('/:id/like').put(protect, likeComment);
-// router.route('/:id').put(protect, deleteProductComment);
-// router.route('/:id').delete(protect, deleteProductComment);
-router.route('/:id').delete(protect, deleteProductComment);
+router.route('/:id').delete(protect, deleteComment);
 
 export default router;

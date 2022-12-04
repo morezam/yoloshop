@@ -15,7 +15,7 @@ const ProductForm = ({ onSubmit, initial }: ProductFormProps) => {
 		defaultValues: {
 			name: '',
 			price: 0,
-			quantity: 0,
+			countInStock: 0,
 			description: '',
 			brand: '',
 			category: '',
@@ -27,11 +27,11 @@ const ProductForm = ({ onSubmit, initial }: ProductFormProps) => {
 		reset({
 			name: initial?.name,
 			price: initial?.price,
-			quantity: initial?.quantity,
 			description: initial?.description,
 			brand: initial?.brand,
 			category: initial?.category,
 			image: initial?.image,
+			countInStock: initial?.countInStock,
 		});
 	}, [initial]);
 
@@ -61,8 +61,8 @@ const ProductForm = ({ onSubmit, initial }: ProductFormProps) => {
 			<label htmlFor="price">price:</label>
 			<input type="number" {...register('price')} id="price" />
 
-			<label htmlFor="quantity">quantity:</label>
-			<input type="number" {...register('quantity')} id="quantity" />
+			<label htmlFor="countInStock">Count In stock:</label>
+			<input type="number" {...register('countInStock')} id="countInStock" />
 
 			<label htmlFor="description">description:</label>
 			<input type="text" {...register('description')} id="description" />
@@ -74,8 +74,8 @@ const ProductForm = ({ onSubmit, initial }: ProductFormProps) => {
 			<input type="text" {...register('category')} id="category" />
 
 			<label htmlFor="image">image:</label>
+			<input type="text" id="image" {...register('image')} />
 			<input type="file" onChange={uploadFileHandler} id="image" />
-
 			<button>Submit</button>
 		</form>
 	);

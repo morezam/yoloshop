@@ -10,7 +10,7 @@ const CommentsInProduct = ({ prodId }: { prodId: string }) => {
 	const { data, refetch } = useQuery({
 		queryKey: ['comments', prodId],
 		queryFn: () => {
-			return shop.get<CommentType<string>[]>(`/comments/${prodId}`);
+			return shop.get<CommentType<string>[]>(`products/${prodId}/comments`);
 		},
 	});
 
@@ -37,7 +37,7 @@ const CommentsInProduct = ({ prodId }: { prodId: string }) => {
 						return (
 							<li key={comment._id}>
 								<hr />
-								{user.token ? (
+								{user.isAdmin ? (
 									<button
 										onClick={() =>
 											deleteComment({

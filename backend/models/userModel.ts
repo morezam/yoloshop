@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import { UserType } from '@types';
 
 export type IUser = Document &
-	UserType & {
+	UserType<mongoose.Schema.Types.ObjectId> & {
 		comparePassword: (candidatePassword: string) => boolean;
 		securityNumber?: number;
 	};
@@ -27,6 +27,21 @@ export const userSchema = new mongoose.Schema<IUser>(
 			{
 				type: mongoose.Schema.Types.ObjectId,
 				ref: 'Product',
+				required: true,
+			},
+		],
+		comments: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Comment',
+				required: true,
+			},
+		],
+		orders: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Order',
+				required: true,
 			},
 		],
 		isAdmin: {

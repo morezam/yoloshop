@@ -1,4 +1,8 @@
-import { getProductById, getProducts } from './getProduct';
+import {
+	getProductById,
+	getProducts,
+	getCommentsByProductId,
+} from './getProduct';
 import { createProduct, deleteProduct, updateProduct } from './editProduct';
 
 export {
@@ -7,4 +11,5 @@ export {
 	createProduct,
 	deleteProduct,
 	updateProduct,
+	getCommentsByProductId,
 };

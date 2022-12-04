@@ -32,13 +32,35 @@ export const productsLoader: LoaderFunction = async () => {
 
 const Home = () => {
 	const [page, setPage] = useState(1);
+	const [range, setRange] = useState(0);
 	const { data } = useQuery(getProducts(page));
 	const { user } = useAuthContext();
 	const { order } = useOrderContext();
 
+	const numFormatter = new Intl.NumberFormat();
+
 	return (
 		<div>
-			Home
+			<p>Home range: {numFormatter.format(range)}</p>
+			<input
+				type="range"
+				value={range}
+				onChange={e => setRange(+e.target.value)}
+				max={10000000}
+				step={1000}
+				min={500}
+				id=""
+			/>
+
+			<input
+				type="range"
+				value={range}
+				onChange={e => setRange(+e.target.value)}
+				max={10000000}
+				step={1000}
+				min={500}
+				id=""
+			/>
 			<CustomErrorBoundary>
 				<div>
 					<Link to={`/cart`}>in cart {order.items?.length}</Link>
