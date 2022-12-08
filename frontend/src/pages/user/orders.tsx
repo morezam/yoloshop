@@ -1,5 +1,6 @@
 import Orders from '@components/Orders';
 import Pagination from '@components/pagination';
+import UserNav from '@components/user/UserNav';
 import { useAuthContext } from '@context/authContext';
 import { useQuery } from '@tanstack/react-query';
 import { OrderType } from '@types';
@@ -30,6 +31,7 @@ const UserOrders = () => {
 		<div>
 			{data ? (
 				<>
+					<UserNav />
 					<Orders orders={data.data.orders} />
 					<Pagination
 						currentPage={page}

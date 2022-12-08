@@ -1,7 +1,7 @@
 import ErrorComponent from '@components/Error';
 import Login from '@pages/login';
 import Logout from '@components/userSign/Logout';
-import Signup, { signupAction } from '@pages/signup';
+import Signup from '@pages/signup';
 import EmailSent from '@pages/email-sent';
 import ForgetPassword from '@pages/forgetPassword';
 import UserProfile, { userLoader } from '@pages/user/userProfile';
@@ -19,7 +19,6 @@ export const userSignRoutes: RouteObject[] = [
 	{
 		path: '/signup',
 		element: <Signup />,
-		action: signupAction,
 		errorElement: <ErrorComponent />,
 	},
 	{
@@ -46,7 +45,7 @@ export const userSignRoutes: RouteObject[] = [
 	{
 		path: '/verify-secNum',
 		element: <VerifySecNum />,
-		errorElement: <ErrorComponent />,
+		errorElement: <VerifySecNum />,
 	},
 	{
 		path: '/user/profile/:id/favorites',

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { ProductType } from '@types';
+import { formatRating } from '@utils/formatRating';
 
 type IProduct = Document & ProductType<mongoose.Schema.Types.ObjectId>;
 
@@ -93,7 +94,7 @@ productSchema.pre('save', async function (next) {
 		product.comments.reduce((acc, item) => item.rating + acc, 0) /
 		product.comments.length;
 
-	product.rating = +avRating.toFixed(1);
+	product.rating = formatRating(+avRating);
 
 	next();
 });

@@ -1,5 +1,6 @@
 import Comments from '@components/comment/CommentsInProfile';
 import Pagination from '@components/pagination';
+import UserNav from '@components/user/UserNav';
 import { useAuthContext } from '@context/authContext';
 import { useQuery } from '@tanstack/react-query';
 import { CommentType } from '@types';
@@ -34,6 +35,7 @@ const UserComments = () => {
 		<div>
 			{data ? (
 				<>
+					<UserNav />
 					<Comments comments={data.data.comments} />
 					<Pagination
 						currentPage={page}

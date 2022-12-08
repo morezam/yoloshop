@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Order } from '@models/orderModel';
 import { Schema } from 'mongoose';
+import { ProductType } from '@types';
 
 export const getOrders = async (
 	req: Request,
@@ -138,7 +139,8 @@ export const payOrder = async (
 
 		order.isPaid = true;
 		order.orderItems.forEach(item => {
-			item.product.purchasedNum = item.product.purchasedNum + 1;
+			const product = item.product as unknown as ProductType<string>;
+			product.purchasedNum = product.purchasedNum + 1;
 		});
 
 		order.save(function (err) {

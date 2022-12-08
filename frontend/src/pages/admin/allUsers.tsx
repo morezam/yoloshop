@@ -1,42 +1,16 @@
-import { LoaderFunction, redirect } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { shop } from '@utils/api';
-import { queryClient } from '@utils/queryClient';
 import { useAuthContext } from '@context/authContext';
 import UserComponent from '@components/user/UserComponent';
 import { UserType } from '@types';
 import { useState } from 'react';
 import Pagination from '@components/pagination';
-
-const getAllUsers = (token: string) => ({
-	queryKey: ['users'],
-	queryFn: async () => {
-		return shop.get<UserType[]>(`/user/all`, {
-			headers: {
-				authorization: `Bearer ${token}`,
-			},
-		});
-	},
-});
-
-// export const usersLoader: LoaderFunction = async () => {
-// 	const user = JSON.parse(window.localStorage.getItem('user') as string);
-// 	const query = getAllUsers(user.token);
-
-// 	if (!user.isAdmin) {
-// 		redirect(`user/profile/${user.id}`);
-// 	}
-
-// 	return (
-// 		queryClient.getQueryData(query.queryKey) ??
-// 		(await queryClient.fetchQuery(query))
-// 	);
-// };
+import AdminNav from '@components/adminProfile/AdminNav';
+import TableLayout from '@layouts/TableLayout';
 
 interface ResponseData {
-	users: UserType[];
+	users: UserType<string>[];
 	pages: number;
-	page: number;
 }
 
 const AllUsers = () => {
@@ -60,15 +34,26 @@ const AllUsers = () => {
 
 	return (
 		<>
+			<AdminNav />
+
 			{data ? (
 				<>
-					<ul>
+					<TableLayout
+						headers={[
+							'R',
+							'Name',
+							'Email',
+							'User Id',
+							'Verified',
+							'Admin',
+							'Delete',
+						]}>
 						{users
-							? users.map(user => {
-									return <UserComponent key={user._id} user={user} />;
+							? users.map((user, i) => {
+									return <UserComponent key={user._id} user={user} index={i} />;
 							  })
 							: null}
-					</ul>
+					</TableLayout>
 					<Pagination
 						currentPage={page}
 						totalPageCount={data.data.pages}

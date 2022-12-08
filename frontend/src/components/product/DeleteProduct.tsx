@@ -1,3 +1,4 @@
+import Btn from '@components/Btn';
 import { useAuthContext } from '@context/authContext';
 import { useMutation } from '@tanstack/react-query';
 import { shop } from '@utils/api';
@@ -7,9 +8,10 @@ interface DeleteProductProps {
 	id: string;
 	to?: string;
 	image: string;
+	children: React.ReactNode;
 }
 
-const DeleteProduct = ({ id, to, image }: DeleteProductProps) => {
+const DeleteProduct = ({ id, to, image, children }: DeleteProductProps) => {
 	const { user } = useAuthContext();
 	const navigate = useNavigate();
 
@@ -26,7 +28,7 @@ const DeleteProduct = ({ id, to, image }: DeleteProductProps) => {
 		},
 	});
 
-	return <button onClick={() => mutate(image)}>delete</button>;
+	return <div onClick={() => mutate(image)}>{children}</div>;
 };
 
 export default DeleteProduct;

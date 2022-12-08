@@ -7,14 +7,24 @@ export const getProducts = async (
 	next: NextFunction
 ) => {
 	const pageFromReq = req.query.page;
-	const perPage = 10;
+	const perPage = req.query.limit ? +req.query.limit : 10;
 	const page = pageFromReq ? +pageFromReq - 1 : 0;
+
+	const key = req.query.key
+		? {
+				name: {
+					$regex: req.query.key,
+					$options: 'i',
+				},
+		  }
+		: {};
+
 	try {
-		const products = await Product.find({})
+		const products = await Product.find(key)
 			.limit(perPage)
 			.skip(perPage * page);
 
-		const count = await Product.count({});
+		const count = await Product.count(key);
 
 		const pages = Math.ceil(count / perPage);
 

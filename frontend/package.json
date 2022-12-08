@@ -15,6 +15,7 @@
 		"react-dom": "^18.2.0",
 		"react-error-boundary": "^3.1.4",
 		"react-hook-form": "^7.39.5",
+		"react-icons": "^4.7.1",
 		"react-router-dom": "^6.4.3",
 		"vite-tsconfig-paths": "^3.6.0"
 	},

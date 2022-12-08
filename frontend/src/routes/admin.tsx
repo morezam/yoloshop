@@ -1,5 +1,5 @@
 import { RouteObject } from 'react-router-dom';
-import Products from '@pages/admin/allProducts';
+import Products, { productsLoader } from '@pages/admin/allProducts';
 import CreateProduct from '@pages/admin/createProduct';
 import AllUsers from '@pages/admin/allUsers';
 import ProductDetails, { productLoader } from '@pages/admin/productDetails';
@@ -10,6 +10,7 @@ export const adminRoutes: RouteObject[] = [
 	{
 		path: '/user/profile/products',
 		element: <Products />,
+		loader: productsLoader,
 	},
 	{
 		path: '/user/profile/product/:id',

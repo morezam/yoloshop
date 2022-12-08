@@ -1,3 +1,4 @@
+import AdminNav from '@components/adminProfile/AdminNav';
 import Comments from '@components/comment/CommentsInProfile';
 import Pagination from '@components/pagination';
 import { useAuthContext } from '@context/authContext';
@@ -45,6 +46,7 @@ const AllComments = () => {
 		<div>
 			{data ? (
 				<>
+					<AdminNav />
 					<Comments comments={data.data.comments} onDelete={deleteComment} />
 					<Pagination
 						currentPage={page}

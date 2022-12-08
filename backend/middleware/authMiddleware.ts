@@ -40,7 +40,7 @@ export const protect = async (
 			next();
 		} catch (error) {
 			res.status(500);
-			next(new Error(`Auth error ${error.message}`));
+			next(new Error(`${error.message} Please Login Again!`));
 			return;
 		}
 	} else {

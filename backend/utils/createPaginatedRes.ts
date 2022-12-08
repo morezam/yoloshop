@@ -7,7 +7,7 @@ export const createPaginatedRes = <T>(
 
 	const pages = Math.ceil(count / perPage);
 
-	const firstPageIndex = (page - 1) * perPage;
+	const firstPageIndex = page * perPage;
 	const lastPageIndex = firstPageIndex + perPage;
 
 	const sliced = array.slice(firstPageIndex, lastPageIndex);

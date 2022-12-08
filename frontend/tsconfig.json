@@ -23,6 +23,7 @@
 			"@context/*": ["src/context/*"],
 			"@routes/*": ["src/routes/*"],
 			"@hooks/*": ["src/hooks/*"],
+			"@layouts/*": ["src/layouts/*"],
 			"@types": ["types"]
 		}
 	},

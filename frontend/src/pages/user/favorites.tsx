@@ -6,6 +6,7 @@ import { useAuthContext } from '@context/authContext';
 import ShowFavorites, { Favorite } from '@components/favorites/ShowFavorites';
 import { useMemo, useState } from 'react';
 import Pagination from '@components/pagination';
+import UserNav from '@components/user/UserNav';
 
 export const getFavProducts = (token: string) => ({
 	queryKey: ['favorites'],
@@ -45,6 +46,7 @@ const Favorites = () => {
 
 	return (
 		<>
+			<UserNav />
 			{currentFavData ? (
 				currentFavData.length !== 0 ? (
 					<>

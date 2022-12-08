@@ -1,11 +1,17 @@
 import { useNavigate, Link } from 'react-router-dom';
 import { useErrorHandler } from 'react-error-boundary';
+import { FaAngleRight } from 'react-icons/fa';
 import CustomErrorBoundary from '@components/CustomErrorBoundary';
 import { useAuthContext } from '@context/authContext';
 import { useMutation } from '@tanstack/react-query';
 import { shop } from '@utils/api';
 import { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
+import Nav from '@components/Nav';
+import PasswordInput from '@components/PasswordInput';
+import FormLayout from '@layouts/FormLayout';
+import Input from '@components/Input';
+import Btn from '@components/Btn';
 
 interface LoginResponse {
 	id: string;
@@ -16,6 +22,11 @@ interface LoginResponse {
 
 interface ErrorResponse {
 	message: string;
+}
+
+interface LoginArgs {
+	email: string;
+	password: string;
 }
 
 const LoginComponent = ({ to }: { to: string }) => {
@@ -35,7 +46,7 @@ const LoginComponent = ({ to }: { to: string }) => {
 	const handleError = useErrorHandler();
 
 	const mutation = useMutation({
-		mutationFn: data => {
+		mutationFn: (data: LoginArgs) => {
 			return shop.post<LoginResponse>('/user/login', data);
 		},
 		onSuccess(data) {
@@ -50,37 +61,31 @@ const LoginComponent = ({ to }: { to: string }) => {
 		},
 	});
 
-	const onFormSubmit = (data: any) => {
+	const onFormSubmit = (data: LoginArgs) => {
 		mutation.mutate(data);
 	};
 
 	return (
 		<>
-			<form onSubmit={handleSubmit(onFormSubmit)}>
-				<input
-					{...register('email', {
-						// required: true,
-						// pattern: {
-						// 	value: /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/,
-						// 	message: 'Email Is Not Valid',
-						// },
-					})}
-				/>
+			<Nav />
+			<FormLayout title="Login To Your Account" styling="max-w-md">
+				<form className="flex flex-col" onSubmit={handleSubmit(onFormSubmit)}>
+					<Input label="Email" type="email" {...register('email')} />
 
-				<input
-					type="password"
-					{...register('password', {
-						// required: true,
-						// pattern: {
-						// 	value: /^(?=.*\d)(?=.*[a-z])(?=.*[!@#$%^&*]).{8,}$/,
-						// 	message:
-						// 		'Password must be at least 8 characters long with at least one letter and one special character',
-						// },
-					})}
-				/>
-				<button type="submit">Submit</button>
-			</form>
-			<Link to={'/user/password-reset'}>Forgot Your Password?</Link>
+					<label htmlFor="password">Password : </label>
+					<PasswordInput
+						id="password"
+						{...register('password', { required: true })}
+					/>
+					<Btn styling="my-4">Login</Btn>
+					<Link
+						to={'/password-reset'}
+						className="w-full flex items-center justify-center px-2 pb-1 pt-5 hover:text-slate-300 rounded-md">
+						Forgot Your Password?{' '}
+						<FaAngleRight className="fill-slate-600 hover:fill-slate-900" />
+					</Link>
+				</form>
+			</FormLayout>
 		</>
 	);
 };

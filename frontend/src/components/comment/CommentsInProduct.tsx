@@ -1,3 +1,4 @@
+import Stars from '@components/Stars';
 import { useAuthContext } from '@context/authContext';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { CommentType } from '@types';
@@ -48,9 +49,10 @@ const CommentsInProduct = ({ prodId }: { prodId: string }) => {
 										delete
 									</button>
 								) : null}
-								<p>
-									{comment.userName} - {comment.rating}
-								</p>
+								<div className="flex items-center">
+									<p className="pr-5">{comment.userName}</p>
+									<Stars rating={comment.rating} />
+								</div>
 								<p>{comment.text}</p>
 								<VoteComponent comment={comment} />
 								<hr />

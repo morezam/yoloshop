@@ -77,7 +77,7 @@ export const deleteProduct = async (
 	next: NextFunction
 ) => {
 	const { id } = req.params;
-	const { image } = req.query;
+	const image = req.query.image as string;
 
 	if (!req.user.isAdmin) {
 		res.status(401);
@@ -86,15 +86,17 @@ export const deleteProduct = async (
 	}
 	const __customDirName = path.resolve();
 
-	fs.unlink(path.join(__customDirName, `/${image}`), function (err) {
-		if (err) {
-			res.status(500);
-			next(err);
-			return;
-		} else {
-			console.log('Successfully deleted the file.');
-		}
-	});
+	if (image.startsWith('/')) {
+		fs.unlink(path.join(__customDirName, `/${image}`), function (err) {
+			if (err) {
+				res.status(500);
+				next(err);
+				return;
+			} else {
+				console.log('Successfully deleted the file.');
+			}
+		});
+	}
 
 	try {
 		await Product.findByIdAndDelete(id);

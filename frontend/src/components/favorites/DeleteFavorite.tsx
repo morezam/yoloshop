@@ -13,7 +13,13 @@ export const deleteFavorite = (token: string, prodId: string) => ({
 	},
 });
 
-const DeleteFavorite = ({ prodId }: { prodId: string }) => {
+const DeleteFavorite = ({
+	prodId,
+	children,
+}: {
+	prodId: string;
+	children: React.ReactNode;
+}) => {
 	const { user } = useAuthContext();
 
 	const key = ['favorites'];
@@ -47,7 +53,7 @@ const DeleteFavorite = ({ prodId }: { prodId: string }) => {
 		mutate();
 	};
 
-	return <button onClick={() => onFavDelete()}>Delete</button>;
+	return <div onClick={() => onFavDelete()}>{children}</div>;
 };
 
 export default DeleteFavorite;

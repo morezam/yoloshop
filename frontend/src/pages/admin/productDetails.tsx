@@ -5,6 +5,8 @@ import { queryClient } from '@utils/queryClient';
 import { ProductType } from '@types';
 import ProductDetailsComponent from '@components/adminProfile/ProductDetailsComponent';
 import DeleteProduct from '@components/product/DeleteProduct';
+import CustomErrorBoundary from '@components/CustomErrorBoundary';
+import AdminNav from '@components/adminProfile/AdminNav';
 
 const getProductDetails = (id: string) => ({
 	queryKey: ['product', { id }],
@@ -34,14 +36,10 @@ const ProductDetails = () => {
 	const product = data?.data as ProductType<string>;
 
 	return (
-		<div>
+		<CustomErrorBoundary>
+			<AdminNav />
 			<ProductDetailsComponent product={product} />
-			<DeleteProduct
-				id={product._id}
-				to="/user/profile/products"
-				image={product.image}
-			/>
-		</div>
+		</CustomErrorBoundary>
 	);
 };
 

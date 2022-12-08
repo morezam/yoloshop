@@ -1,5 +1,11 @@
 import { useAuthContext } from '@context/authContext';
 import { useMutation } from '@tanstack/react-query';
+import {
+	AiOutlineLike,
+	AiOutlineDislike,
+	AiFillLike,
+	AiFillDislike,
+} from 'react-icons/ai';
 import { CommentType } from '@types';
 import { shop } from '@utils/api';
 import { queryClient } from '@utils/queryClient';
@@ -87,27 +93,35 @@ const VoteComponent = ({ comment }: { comment: CommentType<string> }) => {
 		onError: (err, newTodo, context) => {
 			queryClient.setQueryData(key, context?.previousComment);
 		},
-		// onSettled: () => {
-		// 	queryClient.invalidateQueries({ queryKey: ['comment', comment.product] });
-		// },
 	});
 
 	return (
-		<>
-			<button
+		<div className="text-lg flex items-center">
+			<div
 				onClick={() => editLike(true)}
-				style={{ color: votedUser && votedUser.like ? 'red' : 'black' }}>
-				like : {comment.like}
-			</button>
-			<p></p>
-			<button
+				className={`flex items-center mx-2 px-2 rounded-full border-2 border-slate-300 cursor-pointer ${
+					votedUser && votedUser.like ? 'bg-slate-300' : ''
+				}`}>
+				{votedUser && votedUser.like ? <AiFillLike /> : <AiOutlineLike />}{' '}
+				{comment.like}
+			</div>
+			<div
 				onClick={() => editLike(false)}
-				style={{
-					color: votedUser ? (votedUser.like ? 'black' : 'red') : 'black',
-				}}>
-				disLike: {comment.disLike}
-			</button>
-		</>
+				className={`flex items-center mx-2 px-2 rounded-full border-2 border-slate-300 cursor-pointer ${
+					votedUser ? (votedUser.like ? '' : 'bg-slate-300') : ''
+				} `}>
+				{votedUser ? (
+					votedUser.like ? (
+						<AiOutlineDislike />
+					) : (
+						<AiFillDislike />
+					)
+				) : (
+					<AiOutlineDislike />
+				)}{' '}
+				{comment.disLike}
+			</div>
+		</div>
 	);
 };
 

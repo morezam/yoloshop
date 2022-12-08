@@ -1,53 +1,59 @@
+import { useState } from 'react';
+import Nav from '@components/Nav';
 import { useMutation } from '@tanstack/react-query';
 import { shop } from '@utils/api';
-import { SyntheticEvent, useEffect } from 'react';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
+import PasswordInput from '@components/PasswordInput';
+import CustomErrorBoundary from '@components/CustomErrorBoundary';
+import { AxiosError, AxiosResponse } from 'axios';
+import FormLayout from '@layouts/FormLayout';
+import Input from '@components/Input';
+import Btn from '@components/Btn';
 
+type ErrorRes = AxiosError<{
+	message: string;
+}>;
 const VerifySecNum = () => {
-	const location = useLocation();
+	const [success, setSuccess] = useState(false);
 	const navigate = useNavigate();
-
-	const {
-		mutate: mutateSecNum,
-		data,
-		isLoading,
-	} = useMutation({
-		mutationFn: (secNum: number) => {
-			return shop.post('/user/verify-secNum', {
-				email,
-				secNum,
-			});
-		},
-	});
-
-	const {
-		mutate: mutatePassword,
-		data: passwordData,
-		isLoading: isLoadingPassword,
-	} = useMutation({
-		mutationFn: (password: string) => {
-			return shop.post('/user/change-password-login', {
-				email,
-				password,
-			});
-		},
-	});
-
+	const location = useLocation();
 	const email = location.search.slice(1);
-	const onSubmitSecNum = (e: SyntheticEvent) => {
-		e.preventDefault();
-		const { secNum } = Object.fromEntries(
-			new FormData(e.target as HTMLFormElement)
-		);
-		mutateSecNum(+secNum);
+
+	const { handleSubmit: handleSecNumSubmit, register: registerSecNum } =
+		useForm({ defaultValues: { securityNum: '' } });
+
+	const { handleSubmit, register } = useForm({
+		defaultValues: { password: '' },
+	});
+
+	const {
+		mutate: verifySecNum,
+		isLoading,
+		isError,
+		error,
+	} = useMutation<AxiosResponse<string>, ErrorRes, number>({
+		mutationFn: (secNum: number) => {
+			return shop.post('/user/verify-secNum', { email, secNum });
+		},
+		onSuccess() {
+			setSuccess(true);
+		},
+	});
+
+	const { mutate: mutatePassword, data: passwordData } = useMutation({
+		mutationFn: (password: string) => {
+			return shop.post('/user/change-password-login', { email, password });
+		},
+	});
+
+	const onSubmitSecNum = ({ securityNum }: { securityNum: string }) => {
+		verifySecNum(+securityNum);
 	};
 
-	const onSubmitPassword = (e: SyntheticEvent) => {
-		e.preventDefault();
-		const { password } = Object.fromEntries(
-			new FormData(e.target as HTMLFormElement)
-		);
-		mutatePassword(password as string);
+	const onSubmitPassword = ({ password }: { password: string }) => {
+		mutatePassword(password);
 	};
 
 	useEffect(() => {
@@ -64,24 +70,61 @@ const VerifySecNum = () => {
 	}, [passwordData]);
 
 	return (
-		<>
-			<h2>Please Enter Security Number Sent to your email</h2>
-			<form onSubmit={onSubmitSecNum}>
-				<input type="number" name="secNum" />
-			</form>
+		<CustomErrorBoundary>
+			<Nav />
+			<FormLayout
+				title="Please Enter Security Number Sent to Your Email"
+				styling="max-w-md">
+				<form
+					className="flex flex-col"
+					onSubmit={handleSecNumSubmit(onSubmitSecNum)}>
+					<Input
+						label="Security Number"
+						disabled={success}
+						type="number"
+						{...registerSecNum('securityNum')}
+					/>
 
-			{isLoading ? (
-				<div>Loading...</div>
-			) : data?.status === 200 ? (
-				<>
-					<h2>Please Enter your new Password</h2>
-					<form onSubmit={onSubmitPassword}>
-						<input type="password" name="password" />
-					</form>
-					{passwordData ? <div>{passwordData.data}</div> : null}
-				</>
-			) : null}
-		</>
+					<Btn disabled={success} styling="my-4">
+						Submit
+					</Btn>
+				</form>
+
+				{isError ? (
+					<p className="text-center text-red-500 font-semibold">
+						{error.response?.data.message}
+					</p>
+				) : null}
+
+				{isLoading ? (
+					<div>Loading...</div>
+				) : success ? (
+					<>
+						<h2 className="text-center text-xl mt-3 mb-5">
+							Please Enter your new Password
+						</h2>
+						<form
+							className="flex flex-col"
+							onSubmit={handleSubmit(onSubmitPassword)}>
+							<label htmlFor="newPassword">New Password: </label>
+							<PasswordInput
+								id="newPassword"
+								{...register('password', {
+									required: true,
+									pattern: {
+										value: /^(?=.*\d)(?=.*[a-z])(?=.*[!@#$%^&*]).{8,}$/,
+										message:
+											'Password must be at least 8 characters long with at least one letter and one special character',
+									},
+								})}
+							/>
+							<Btn styling="my-4">Change Password</Btn>
+						</form>
+						{passwordData ? <div>{passwordData.data}</div> : null}
+					</>
+				) : null}
+			</FormLayout>
+		</CustomErrorBoundary>
 	);
 };
 

@@ -1,5 +1,8 @@
+import TableLayout, { Td } from '@layouts/TableLayout';
 import { OrderType } from '@types';
 import { useErrorHandler } from 'react-error-boundary';
+import { Link } from 'react-router-dom';
+import AdminNav from './adminProfile/AdminNav';
 
 interface OrderProps {
 	orders: OrderType<string>[];
@@ -12,35 +15,42 @@ const Orders = ({ orders, setDelivered }: OrderProps) => {
 	return (
 		<>
 			{orders.length === 0 ? (
-				<p>No Orders Found</p>
+				<p className="text-center text-xl">No Orders Found</p>
 			) : (
-				<ul>
-					{orders.map(order => {
+				<TableLayout
+					headers={[
+						'R',
+						'Order Details',
+						'Order Id',
+						'Total Price',
+						'User Id',
+						'Paid Status',
+						'Delivery Status',
+					]}>
+					{orders.map((order, i) => {
 						return (
-							<li key={order._id}>
-								{order.orderItems.map(item => (
-									<p key={item.product}>
-										{item.name} - {item.price} * {item.qty}
-									</p>
-								))}
-								<div>
-									<p>Paid Status: {order.isPaid ? 'paid' : 'not paid'} </p>
-									<p>
-										Delivered Status:{' '}
-										{order.isDelivered ? 'delivered' : 'not delivered'}
-									</p>
-									{setDelivered ? (
-										<button onClick={() => setDelivered(order._id)}>
-											Deliver This Order
-										</button>
-									) : null}
-									<p>{order.shippingAddress.address}</p>
-									<p>Total Price : {order.totalPrice} $</p>
-								</div>
-							</li>
+							<tr key={order._id}>
+								<Td>{i + 1}</Td>
+								<Td btn>
+									<Link to={`user/profile/order/${order._id}`}>
+										Order Detail
+									</Link>
+								</Td>
+								<Td>{order._id}</Td>
+								<Td styling="whitespace-nowrap">${order.totalPrice}</Td>
+								<Td>{order.user}</Td>
+								<Td styling="whitespace-nowrap">
+									{order.isPaid ? 'Paid' : 'Not Paid'}
+								</Td>
+								{setDelivered ? (
+									<Td onClick={() => setDelivered(order._id)} btn>
+										{order.isDelivered ? 'Delivered' : 'Not Delivered'}
+									</Td>
+								) : null}
+							</tr>
 						);
 					})}
-				</ul>
+				</TableLayout>
 			)}
 		</>
 	);
