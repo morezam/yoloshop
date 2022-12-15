@@ -3,7 +3,13 @@ import { useMutation } from '@tanstack/react-query';
 import { shop } from '@utils/api';
 import { queryClient } from '@utils/queryClient';
 
-const AddToFavorites = ({ prodId }: { prodId: string }) => {
+const AddToFavorites = ({
+	prodId,
+	children,
+}: {
+	prodId: string;
+	children: React.ReactNode;
+}) => {
 	const { user } = useAuthContext();
 
 	const key = ['favorites'];
@@ -31,23 +37,18 @@ const AddToFavorites = ({ prodId }: { prodId: string }) => {
 				};
 			});
 
-			console.log(queryClient.getQueryData(key));
-
 			return { previousFavs };
 		},
 		onError(error, variables, context) {
 			queryClient.setQueryData(key, context?.previousFavs);
 		},
-		// onSettled: () => {
-		// 	queryClient.invalidateQueries(key);
-		// },
 	});
 
 	const onAddToFavs = () => {
 		mutate();
 	};
 
-	return <button onClick={() => onAddToFavs()}>Add To Favs</button>;
+	return <div onClick={() => onAddToFavs()}>{children}</div>;
 };
 
 export default AddToFavorites;

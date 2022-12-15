@@ -9,6 +9,25 @@ export const getProducts = async (
 	const pageFromReq = req.query.page;
 	const perPage = req.query.limit ? +req.query.limit : 10;
 	const page = pageFromReq ? +pageFromReq - 1 : 0;
+	const reqFilter = req.query.sort;
+
+	let sort;
+
+	if (reqFilter === 'most-viewed') {
+		sort = { viewedNum: -1 };
+	} else if (reqFilter === 'most-purchased') {
+		sort = { purchasedNum: -1 };
+	} else if (reqFilter === 'most-recent') {
+		sort = { createdAt: -1 };
+	} else if (reqFilter === 'most-favorites') {
+		sort = { addedToFavs: -1 };
+	} else if (reqFilter === 'most-comments') {
+		sort = { numComments: -1 };
+	} else if (reqFilter === 'top-rating') {
+		sort = { rating: -1 };
+	} else {
+		sort = {};
+	}
 
 	const key = req.query.key
 		? {
@@ -22,7 +41,8 @@ export const getProducts = async (
 	try {
 		const products = await Product.find(key)
 			.limit(perPage)
-			.skip(perPage * page);
+			.skip(perPage * page)
+			.sort(sort);
 
 		const count = await Product.count(key);
 
@@ -74,10 +94,22 @@ export const getCommentsByProductId = async (
 	next: NextFunction
 ) => {
 	const { id } = req.params;
+	const reqFilter = req.query.sort;
+
 	try {
 		const product = await Product.findById(id).populate('comments');
 
-		res.json(product.comments);
+		let comments;
+
+		if (reqFilter === 'most-recent') {
+			comments = product.comments.sort((a, b) => +b.createdAt - +a.createdAt);
+		} else if (reqFilter === 'most-favorites') {
+			comments = product.comments.sort((a, b) => +a.like + +b.like);
+		} else {
+			comments = product.comments;
+		}
+
+		res.json(comments);
 	} catch (error) {
 		res.status(500);
 		next(error);

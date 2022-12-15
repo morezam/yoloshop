@@ -1,4 +1,5 @@
 import { SlBasket, SlMagnifier, SlClose } from 'react-icons/sl';
+import { RiUserLine, RiAdminLine } from 'react-icons/ri';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { useAuthContext } from '@context/authContext';
@@ -7,8 +8,10 @@ import { useState } from 'react';
 
 const Nav = ({
 	onProductSearch,
+	term,
 }: {
 	onProductSearch?: ({ key }: { key: string }) => void;
+	term?: string | null;
 }) => {
 	const { user } = useAuthContext();
 	const { order } = useOrderContext();
@@ -25,7 +28,7 @@ const Nav = ({
 		<nav
 			className={`flex items-center sm:text-lg lg:text-xl bg-slate-800 mb-4 text-slate-200 py-4 justify-between px-5`}>
 			{showSearch ? null : (
-				<Link className="pl-2" to={'/'}>
+				<Link className="mr-1 ml-2" to={'/'}>
 					LOGO
 				</Link>
 			)}
@@ -61,14 +64,14 @@ const Nav = ({
 						onClick={() => setShowSearch(true)}
 						className={`${
 							showSearch ? 'hidden' : 'block'
-						} p-2 mr-6 cursor-pointer sm:hidden bg-orange-500 rounded-full`}>
+						} p-2 mx-3 cursor-pointer bg-orange-500 rounded-full sm:hidden`}>
 						<SlMagnifier className="font-semibold " />
 					</div>
 				</>
 			) : null}
 
 			{!showSearch ? (
-				<div className="flex justify-between items-center w-72 pr-3">
+				<div className="flex justify-between items-center w-72 pr-3 ml-2">
 					{user.token ? (
 						<>
 							<Link to="/logout">Logout</Link>
@@ -84,7 +87,7 @@ const Nav = ({
 					)}
 					<div className="relative">
 						<Link to={`/cart`}>
-							<span className="absolute bottom-4 text-sm left-3 sm:bottom-6">
+							<span className="absolute w-6 h-6 bg-rose-600 rounded-full flex justify-center items-center bottom-4 text-xs left-4 sm:bottom-5">
 								{len}
 							</span>
 							<SlBasket className="text-2xl sm:text-3xl" />

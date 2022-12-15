@@ -3,6 +3,7 @@ import { OrderType } from '@types';
 import { useErrorHandler } from 'react-error-boundary';
 import { Link } from 'react-router-dom';
 import AdminNav from './adminProfile/AdminNav';
+import Copy from './Copy';
 
 interface OrderProps {
 	orders: OrderType<string>[];
@@ -32,13 +33,26 @@ const Orders = ({ orders, setDelivered }: OrderProps) => {
 							<tr key={order._id}>
 								<Td>{i + 1}</Td>
 								<Td btn>
-									<Link to={`user/profile/order/${order._id}`}>
+									<Link to={`/user/profile/order/${order._id}`}>
 										Order Detail
 									</Link>
 								</Td>
-								<Td>{order._id}</Td>
+								<Td>
+									<Copy
+										styling="font-mono hover:text-gray-500"
+										text={order._id}>
+										{order._id}
+									</Copy>
+								</Td>
 								<Td styling="whitespace-nowrap">${order.totalPrice}</Td>
-								<Td>{order.user}</Td>
+
+								<Td>
+									<Copy
+										styling="font-mono hover:text-gray-500"
+										text={order.user}>
+										{order.user}
+									</Copy>
+								</Td>
 								<Td styling="whitespace-nowrap">
 									{order.isPaid ? 'Paid' : 'Not Paid'}
 								</Td>

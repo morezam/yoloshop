@@ -43,8 +43,16 @@ export const updateProduct = async (
 	next: NextFunction
 ) => {
 	const { id } = req.params;
-	const { name, price, countInStock, description, image, brand, category } =
-		req.body;
+	const {
+		name,
+		price,
+		countInStock,
+		quantity,
+		description,
+		image,
+		brand,
+		category,
+	} = req.body;
 
 	if (!req.user.isAdmin) {
 		res.status(401);
@@ -59,6 +67,7 @@ export const updateProduct = async (
 			countInStock,
 			description,
 			image,
+			quantity,
 			brand,
 			category,
 		});

@@ -12,6 +12,20 @@ interface PaginatedOrders {
 	orders: OrderType<string>[];
 }
 
+export const setDeliveredMutation = (token: string) => ({
+	mutationFn: (id: string) => {
+		return shop.put(
+			`/orders/${id}/deliverOrder`,
+			{ isDelivered: true },
+			{
+				headers: {
+					authorization: `Bearer ${token}`,
+				},
+			}
+		);
+	},
+});
+
 const AllOrders = () => {
 	const [page, setPage] = useState(1);
 	const { user } = useAuthContext();
@@ -30,13 +44,7 @@ const AllOrders = () => {
 	});
 
 	const { mutate } = useMutation({
-		mutationFn: (id: string) => {
-			return shop.put(
-				`/orders/${id}/deliverOrder`,
-				{ isDelivered: true },
-				config
-			);
-		},
+		...setDeliveredMutation(user.token as string),
 		onSuccess() {
 			refetch();
 		},

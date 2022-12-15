@@ -37,8 +37,6 @@ const DeleteFavorite = ({
 				};
 			});
 
-			console.log(queryClient.getQueryData(key));
-
 			return { previousFavs };
 		},
 		onError(error, variables, context) {

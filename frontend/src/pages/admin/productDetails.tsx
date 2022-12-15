@@ -7,6 +7,7 @@ import ProductDetailsComponent from '@components/adminProfile/ProductDetailsComp
 import DeleteProduct from '@components/product/DeleteProduct';
 import CustomErrorBoundary from '@components/CustomErrorBoundary';
 import AdminNav from '@components/adminProfile/AdminNav';
+import Back from '@components/Back';
 
 const getProductDetails = (id: string) => ({
 	queryKey: ['product', { id }],
@@ -38,6 +39,7 @@ const ProductDetails = () => {
 	return (
 		<CustomErrorBoundary>
 			<AdminNav />
+			<Back to="/user/profile/products">Products</Back>
 			<ProductDetailsComponent product={product} />
 		</CustomErrorBoundary>
 	);

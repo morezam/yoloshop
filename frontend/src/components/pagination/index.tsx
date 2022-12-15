@@ -1,8 +1,5 @@
-import {
-	usePagination,
-	DOTS,
-	UsePaginationProps,
-} from 'src/hooks/usePagination';
+import { usePagination, DOTS, UsePaginationProps } from '@hooks/usePagination';
+import { Link, useNavigate } from 'react-router-dom';
 import './style.css';
 
 interface PaginationProps extends UsePaginationProps {
@@ -25,15 +22,19 @@ const Pagination = (props: PaginationProps) => {
 		pageSize,
 	}) as (string | number)[];
 
+	const navigate = useNavigate();
+
 	if (currentPage === 0 || paginationRange.length < 2) {
 		return null;
 	}
 
 	const onNext = () => {
+		navigate(`?page=${currentPage + 1}`);
 		onPageChange(currentPage + 1);
 	};
 
 	const onPrevious = () => {
+		navigate(`?page=${currentPage - 1}`);
 		onPageChange(currentPage - 1);
 	};
 
@@ -57,7 +58,10 @@ const Pagination = (props: PaginationProps) => {
 						className={`pagination-item ${
 							pageNumber === currentPage ? 'selected' : 'null'
 						}`}
-						onClick={() => onPageChange(+pageNumber)}>
+						onClick={() => {
+							navigate(`?page=${pageNumber}`);
+							onPageChange(+pageNumber);
+						}}>
 						{pageNumber}
 					</li>
 				);

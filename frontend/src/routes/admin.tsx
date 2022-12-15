@@ -5,6 +5,7 @@ import AllUsers from '@pages/admin/allUsers';
 import ProductDetails, { productLoader } from '@pages/admin/productDetails';
 import AllComments from '@pages/admin/comments';
 import AllOrders from '@pages/admin/orders';
+import OrderDetails from '@pages/admin/orderdetails';
 
 export const adminRoutes: RouteObject[] = [
 	{
@@ -32,5 +33,9 @@ export const adminRoutes: RouteObject[] = [
 	{
 		path: '/user/profile/orders',
 		element: <AllOrders />,
+	},
+	{
+		path: '/user/profile/order/:id',
+		element: <OrderDetails />,
 	},
 ];

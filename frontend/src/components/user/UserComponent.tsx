@@ -1,12 +1,11 @@
-import Btn from '@components/Btn';
 import { useAuthContext } from '@context/authContext';
-import { useCopyToClipboard } from '@hooks/useCopyToClipboard';
 import { Td } from '@layouts/TableLayout';
 import { useMutation } from '@tanstack/react-query';
 import { UserType } from '@types';
 import { shop } from '@utils/api';
 import { queryClient } from '@utils/queryClient';
 import { FaTrash } from 'react-icons/fa';
+import Copy from '@components/Copy';
 
 interface ChangeAdminArgs {
 	name: string;
@@ -22,7 +21,6 @@ const UserComponent = ({
 	index: number;
 }) => {
 	const { user: authUser } = useAuthContext();
-	const [copiedText, copy] = useCopyToClipboard();
 
 	const { mutate: deleteUser } = useMutation({
 		mutationFn: (id: string) => {
@@ -55,32 +53,34 @@ const UserComponent = ({
 	});
 
 	return (
-		<tr>
-			<Td>{index + 1}</Td>
-			<Td>{user.name}</Td>
-			<Td>{user.email}</Td>
-			<Td
-				onClick={() => copy(user._id)}
-				styling="cursor-pointer font-mono hover:text-gray-500">
-				{user._id}
-			</Td>
-			<Td>{user.isVerified ? 'Verified' : 'Not Verified'}</Td>
-			<Td
-				onClick={() =>
-					changeAdminStatus({
-						id: user._id,
-						adminStatus: !user.isAdmin,
-						name: user.name,
-					})
-				}
-				btn
-				styling="whitespace-nowrap">
-				{user.isAdmin ? 'Admin' : 'Normal User'}
-			</Td>
-			<Td onClick={() => deleteUser(user._id)} btn>
-				<FaTrash className="inline-block text-rose-600" />
-			</Td>
-		</tr>
+		<>
+			<tr>
+				<Td>{index + 1}</Td>
+				<Td>{user.name}</Td>
+				<Td>{user.email}</Td>
+				<Td>
+					<Copy styling="font-mono hover:text-gray-500" text={user._id}>
+						{user._id}
+					</Copy>
+				</Td>
+				<Td>{user.isVerified ? 'Verified' : 'Not Verified'}</Td>
+				<Td
+					onClick={() =>
+						changeAdminStatus({
+							id: user._id,
+							adminStatus: !user.isAdmin,
+							name: user.name,
+						})
+					}
+					btn
+					styling="whitespace-nowrap">
+					{user.isAdmin ? 'Admin' : 'Normal User'}
+				</Td>
+				<Td onClick={() => deleteUser(user._id)} btn>
+					<FaTrash className="inline-block text-rose-600" />
+				</Td>
+			</tr>
+		</>
 	);
 };
 

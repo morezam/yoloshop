@@ -2,8 +2,7 @@ import ProfileNav from '@components/nav/ProfileNav';
 import { Link } from 'react-router-dom';
 
 const AdminNav = () => {
-	const className =
-		'text-slate-900 px-3 py-2 border-2 w-full text-center border-slate-200 md:text-inherit md:border-0 md:p-0';
+	const className = 'text-slate-100 px-3 py-2 text-center md:py-0';
 	return (
 		<ProfileNav>
 			<Link to={`/user/profile/products`} className={className}>

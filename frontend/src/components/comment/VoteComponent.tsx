@@ -9,10 +9,17 @@ import {
 import { CommentType } from '@types';
 import { shop } from '@utils/api';
 import { queryClient } from '@utils/queryClient';
+import { numFormatter } from '@utils/numberFormatter';
 
-const VoteComponent = ({ comment }: { comment: CommentType<string> }) => {
+const VoteComponent = ({
+	comment,
+	sort,
+}: {
+	comment: CommentType<string>;
+	sort: string | null;
+}) => {
 	const { user } = useAuthContext();
-	const key = ['comments', comment.product];
+	const key = ['comments', comment.product, sort];
 
 	const votedUser = comment.votedUsers.find(
 		votedUser => votedUser._id === user.id
@@ -86,8 +93,6 @@ const VoteComponent = ({ comment }: { comment: CommentType<string> }) => {
 				};
 			});
 
-			console.log(queryClient.getQueryData(key));
-
 			return { previousComment };
 		},
 		onError: (err, newTodo, context) => {
@@ -96,18 +101,18 @@ const VoteComponent = ({ comment }: { comment: CommentType<string> }) => {
 	});
 
 	return (
-		<div className="text-lg flex items-center">
+		<div className="text-lg flex items-center sm:justify-end">
 			<div
 				onClick={() => editLike(true)}
-				className={`flex items-center mx-2 px-2 rounded-full border-2 border-slate-300 cursor-pointer ${
+				className={`flex items-center mx-2 px-2  rounded-lg border-2 border-slate-300 cursor-pointer ${
 					votedUser && votedUser.like ? 'bg-slate-300' : ''
 				}`}>
 				{votedUser && votedUser.like ? <AiFillLike /> : <AiOutlineLike />}{' '}
-				{comment.like}
+				<p className="pl-1">{numFormatter(comment.like ? comment.like : 0)}</p>
 			</div>
 			<div
 				onClick={() => editLike(false)}
-				className={`flex items-center mx-2 px-2 rounded-full border-2 border-slate-300 cursor-pointer ${
+				className={`flex items-center mx-2 px-2 rounded-lg border-2 border-slate-300 cursor-pointer ${
 					votedUser ? (votedUser.like ? '' : 'bg-slate-300') : ''
 				} `}>
 				{votedUser ? (
@@ -119,7 +124,9 @@ const VoteComponent = ({ comment }: { comment: CommentType<string> }) => {
 				) : (
 					<AiOutlineDislike />
 				)}{' '}
-				{comment.disLike}
+				<p className="pl-1">
+					{numFormatter(comment.disLike ? comment.disLike : 0)}
+				</p>
 			</div>
 		</div>
 	);

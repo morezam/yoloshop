@@ -23,6 +23,7 @@ const ProductForm = ({ onSubmit, initial, children }: ProductFormProps) => {
 		defaultValues: {
 			name: '',
 			price: 0,
+			quantity: 0,
 			countInStock: 0,
 			description: '',
 			brand: '',
@@ -35,6 +36,7 @@ const ProductForm = ({ onSubmit, initial, children }: ProductFormProps) => {
 		reset({
 			name: initial?.name,
 			price: initial?.price,
+			quantity: initial?.quantity,
 			description: initial?.description,
 			brand: initial?.brand,
 			category: initial?.category,
@@ -70,6 +72,7 @@ const ProductForm = ({ onSubmit, initial, children }: ProductFormProps) => {
 				onSubmit={handleSubmit(onSubmit)}>
 				<Input label="Name" {...register('name')} />
 				<Input type="number" label="Price" {...register('price')} />
+				<Input type="number" label="Quantity" {...register('quantity')} />
 				<Input
 					type="number"
 					label="Count In stock"
@@ -104,8 +107,10 @@ const ProductForm = ({ onSubmit, initial, children }: ProductFormProps) => {
 
 				<Btn
 					disabled={!isDirty}
-					styling="disabled:bg-gray-500 col-start-1 col-end-3 mt-5">
-					{initial ? 'Update' : 'Create'}
+					styling={`disabled:bg-gray-500 col-start-1 ${
+						initial ? 'col-end-2' : 'col-end-3'
+					} mt-5`}>
+					{initial ? 'Update Product' : 'Create'}
 				</Btn>
 				{children}
 			</form>

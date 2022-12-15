@@ -1,6 +1,8 @@
+import Btn from '@components/Btn';
+import Input from '@components/Input';
 import { useAuthContext } from '@context/authContext';
+import FormLayout from '@layouts/FormLayout';
 import { useMutation } from '@tanstack/react-query';
-import { CommentType } from '@types';
 import { shop } from '@utils/api';
 import { queryClient } from '@utils/queryClient';
 import { useForm } from 'react-hook-form';
@@ -10,14 +12,25 @@ interface CreateCommentData {
 	text: string;
 }
 
-const CreateComment = ({ prodId }: { prodId: string }) => {
-	const { register, handleSubmit } = useForm<CreateCommentData>({
+const CreateComment = ({
+	prodId,
+	sort,
+}: {
+	prodId: string;
+	sort: string | null;
+}) => {
+	const {
+		register,
+		handleSubmit,
+		reset,
+		formState: { errors, isDirty, isValid },
+	} = useForm<CreateCommentData>({
 		defaultValues: {
 			rating: 0,
 			text: '',
 		},
 	});
-	const key = ['comments', prodId];
+	const key = ['comments', prodId, sort];
 
 	const { user } = useAuthContext();
 
@@ -57,7 +70,6 @@ const CreateComment = ({ prodId }: { prodId: string }) => {
 			});
 
 			console.log(queryClient.getQueryData(key));
-
 			return { previousComments };
 		},
 		onError(error, variables, context) {
@@ -69,23 +81,46 @@ const CreateComment = ({ prodId }: { prodId: string }) => {
 	});
 
 	const onCreateComment = (data: CreateCommentData) => {
-		console.log(data);
-		mutate(data);
+		mutate({ rating: +data.rating, text: data.text });
+		reset();
 	};
 
 	return (
-		<form onSubmit={handleSubmit(onCreateComment)}>
-			<label htmlFor="rating">Rating: </label>
-			<input
-				{...register('rating')}
-				type="number"
-				id="rating"
-				min={0}
-				max={5}
-			/>
-			<label htmlFor="text">Text: </label>
-			<textarea {...register('text')} id="text" cols={30} rows={10}></textarea>
-		</form>
+		<FormLayout
+			title="Leave a Comment"
+			styling="sm:max-w-3xl sm:mx-auto mt-4 mb-8">
+			<form onSubmit={handleSubmit(onCreateComment)} className="flex flex-col">
+				<Input
+					{...register('rating', {
+						required: {
+							value: true,
+							message: 'This Field is required',
+						},
+					})}
+					label="Rating"
+					error={errors.rating?.message}
+					type="number"
+					min={0}
+					max={5}
+				/>
+				<label htmlFor="text">Text: </label>
+				<textarea
+					className="mt-2 text-slate-900 focus:ring-0 focus:outline-0 px-2 py-1 rounded-md"
+					{...register('text', {
+						required: {
+							value: true,
+							message: 'This Field is required',
+						},
+					})}
+					id="text"
+					cols={10}
+					rows={4}></textarea>
+				<p className="text-rose-500">{errors.text?.message}</p>
+				<Btn disabled={!isDirty} styling="my-4">
+					Submit
+				</Btn>
+			</form>
+		</FormLayout>
 	);
 };
 

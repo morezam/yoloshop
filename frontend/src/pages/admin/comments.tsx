@@ -47,7 +47,7 @@ const AllComments = () => {
 			{data ? (
 				<>
 					<AdminNav />
-					<Comments comments={data.data.comments} onDelete={deleteComment} />
+					<Comments comments={data.data.comments} admin />
 					<Pagination
 						currentPage={page}
 						pageSize={10}

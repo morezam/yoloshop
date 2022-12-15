@@ -6,10 +6,10 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import { ProductType } from '@types';
 import { useState } from 'react';
 import Pagination from '@components/pagination';
-import ProductPreview from '@components/product/ProductPreview';
 import TableLayout, { Td } from '@layouts/TableLayout';
 import DeleteProduct from '@components/product/DeleteProduct';
 import AdminNav from '@components/adminProfile/AdminNav';
+import Copy from '@components/Copy';
 
 interface ResponseData {
 	products: ProductType<string>[];
@@ -61,7 +61,13 @@ const Products = () => {
 									<Td>
 										<p className="w-52 lg:w-72">{product.name}</p>
 									</Td>
-									<Td>{product._id}</Td>
+									<Td>
+										<Copy
+											styling="font-mono hover:text-gray-500"
+											text={product._id}>
+											{product._id}
+										</Copy>
+									</Td>
 									<Td>${product.price}</Td>
 									<Td>{product.brand}</Td>
 									<Td styling="whitespace-nowrap">{product.category}</Td>

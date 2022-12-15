@@ -1,5 +1,9 @@
+import Btn from '@components/Btn';
+import Input from '@components/Input';
+import Nav from '@components/Nav';
 import { useAuthContext } from '@context/authContext';
 import { useOrderContext } from '@context/orderContext';
+import FormLayout from '@layouts/FormLayout';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
@@ -18,7 +22,7 @@ const ShippingAddressPage = () => {
 		handleSubmit,
 		register,
 		reset,
-		formState: { errors, isValid },
+		formState: { errors, isValid, isDirty },
 	} = useForm({
 		defaultValues: {
 			address: '',
@@ -44,42 +48,57 @@ const ShippingAddressPage = () => {
 	};
 
 	return (
-		<form onSubmit={handleSubmit(onAddressSubmit)}>
-			<input
-				type="text"
-				{...register('address', {
-					required: {
-						value: true,
-						message: 'This field is required',
-					},
-				})}
-			/>
-			<input
-				type="text"
-				{...register('city', {
-					required: {
-						value: true,
-						message: 'This field is required',
-					},
-				})}
-			/>
-			<input
-				type="text"
-				{...register('postalCode', {
-					required: {
-						value: true,
-						message: 'This field is required',
-					},
-				})}
-			/>
-			<button>Submit</button>
+		<>
+			<Nav />
+			<FormLayout title="Please Enter Your Address" styling="max-w-lg mx-auto">
+				<form
+					onSubmit={handleSubmit(onAddressSubmit)}
+					className="flex flex-col">
+					<Input
+						error={errors.address?.message}
+						label="Address"
+						{...register('address', {
+							required: {
+								value: true,
+								message: 'This field is required',
+							},
+						})}
+					/>
 
-			<p>{errors.address ? errors.address.message : null}</p>
+					<Input
+						error={errors.city?.message}
+						label="City"
+						{...register('city', {
+							required: {
+								value: true,
+								message: 'This field is required',
+							},
+						})}
+					/>
 
-			{isValid && order.address ? (
-				<Link to={'/checkout/place-orders'}>Move on to Place orders</Link>
-			) : null}
-		</form>
+					<Input
+						error={errors.postalCode?.message}
+						label="Postal Code"
+						{...register('postalCode', {
+							required: {
+								value: true,
+								message: 'This field is required',
+							},
+						})}
+					/>
+
+					<Btn disabled={!isDirty} styling="mt-4">
+						Submit
+					</Btn>
+
+					{isValid && order.address ? (
+						<Link to={'/checkout/place-orders'}>
+							<Btn styling="my-4">Move on to Place orders</Btn>
+						</Link>
+					) : null}
+				</form>
+			</FormLayout>
+		</>
 	);
 };
 

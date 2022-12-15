@@ -138,6 +138,7 @@ export const payOrder = async (
 		});
 
 		order.isPaid = true;
+		order.paidAt = new Date();
 		order.orderItems.forEach(item => {
 			const product = item.product as unknown as ProductType<string>;
 			product.purchasedNum = product.purchasedNum + 1;
@@ -172,6 +173,7 @@ export const deliverOrder = async (
 		const order = await Order.findById(id);
 
 		order.isDelivered = isDelivered;
+		order.deliveredAt = new Date();
 
 		order.save(function (err) {
 			if (err) {

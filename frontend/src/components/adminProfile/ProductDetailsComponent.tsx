@@ -7,6 +7,7 @@ import DeleteProduct from '@components/product/DeleteProduct';
 import { useErrorHandler } from 'react-error-boundary';
 import { AxiosResponse } from 'axios';
 import Btn from '@components/Btn';
+import { useNavigate } from 'react-router-dom';
 
 const ProductDetailsComponent = ({
 	product,
@@ -15,6 +16,7 @@ const ProductDetailsComponent = ({
 }) => {
 	const { user } = useAuthContext();
 	const errorHandler = useErrorHandler();
+	const navigate = useNavigate();
 
 	const { mutate } = useMutation<
 		AxiosResponse<string>,
@@ -29,7 +31,7 @@ const ProductDetailsComponent = ({
 			});
 		},
 		onSuccess(data) {
-			console.log(data);
+			navigate('/user/profile/products');
 		},
 		onError(error, variables, context) {
 			errorHandler(error.response?.data);
@@ -46,7 +48,7 @@ const ProductDetailsComponent = ({
 				id={product._id}
 				to="/user/profile/products"
 				image={product.image}>
-				<Btn styling="col-start-1 col-end-3 mt-4">Delete</Btn>
+				<Btn styling="inline col-start-1 col-end-3 mt-4">Delete Product</Btn>
 			</DeleteProduct>
 		</ProductForm>
 	);

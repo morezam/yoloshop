@@ -1,22 +1,16 @@
-import { useCopyToClipboard } from '@hooks/useCopyToClipboard';
 import { CommentType } from '@types';
-import { useErrorHandler } from 'react-error-boundary';
 import { Link } from 'react-router-dom';
-import TableLayout, { Td, Th } from '@layouts/TableLayout';
+import TableLayout, { Td } from '@layouts/TableLayout';
 import { FaTrash } from 'react-icons/fa';
+import Copy from '@components/Copy';
+import DeleteComment from './DeleteComment';
 
 interface CommentsProps {
 	comments: CommentType<string>[];
-	onDelete?: (id: string, prodId: string) => void;
+	admin?: boolean;
 }
 
-const Comments = ({ comments, onDelete }: CommentsProps) => {
-	const [copiedText, copy] = useCopyToClipboard();
-
-	// if (copiedText) {
-	// 	alert('Text Copied');
-	// }
-
+const Comments = ({ comments, admin }: CommentsProps) => {
 	return (
 		<div>
 			{comments.length === 0 ? (
@@ -29,7 +23,7 @@ const Comments = ({ comments, onDelete }: CommentsProps) => {
 						'Product',
 						'User Id',
 						'User Name',
-						onDelete ? 'Delete' : '',
+						admin ? 'Delete' : '',
 					]}>
 					{comments.map((comment, i) => {
 						return (
@@ -44,18 +38,18 @@ const Comments = ({ comments, onDelete }: CommentsProps) => {
 									<Link to={`/product/${comment.product}`}>Product</Link>
 								</Td>
 								<Td>{comment.userName}</Td>
-								<Td
-									onClick={() => copy(comment.user)}
-									styling="cursor-pointer font-mono hover:text-gray-500">
-									{comment.user}
+								<Td>
+									<Copy
+										styling="font-mono hover:text-gray-500"
+										text={comment.user}>
+										{comment.user}
+									</Copy>
 								</Td>
-								{onDelete ? (
-									<Td
-										onClick={() => {
-											onDelete(comment._id, comment.product);
-										}}
-										btn>
-										<FaTrash className="text-rose-600 inline-block" />
+								{admin ? (
+									<Td btn>
+										<DeleteComment id={comment._id} prodId={comment.product}>
+											<FaTrash className="text-rose-600 inline-block" />
+										</DeleteComment>
 									</Td>
 								) : null}
 							</tr>

@@ -5,6 +5,8 @@ import { getTotalPrice } from '@utils/getTotalPrice';
 import { useMutation } from '@tanstack/react-query';
 import { shop } from '@utils/api';
 import { OrderType } from '@types';
+import Nav from '@components/Nav';
+import ProductPreview from '@components/product/ProductPreview';
 
 interface CreateOrder {
 	orderItems: CartItem[];
@@ -13,8 +15,6 @@ interface CreateOrder {
 	shippingPrice: number;
 	totalPrice: number;
 }
-
-// orderItems, shippingAddress, taxPrice, shippingPrice, totalPrice
 
 const PlaceOrdersPage = () => {
 	const { order, setOrder } = useOrderContext();
@@ -54,30 +54,49 @@ const PlaceOrdersPage = () => {
 	};
 
 	return (
-		<div>
-			<h2>Products :</h2>
-			<ul>
-				{order.items.map(item => {
-					return (
-						<li key={item.product}>
-							{item.name} - {item.price} * {item.qty}
-						</li>
-					);
-				})}
-			</ul>
+		<div className="pb-20">
+			<Nav />
+			<div className="sm:flex sm:justify-center	sm:items-center sm:gap-x-3">
+				<ul className="sm:w-1/2">
+					<h2>Products :</h2>
+					{order.items.map((item, i) => {
+						return (
+							<ProductPreview item={item} index={i}>
+								<p className="p-[-10px]">qty: {item.qty}</p>
+							</ProductPreview>
+						);
+					})}
+				</ul>
 
-			<h2>Address :</h2>
-			<div>
-				{order.address?.address} - {order.address?.city}
-			</div>
+				<div className="text-center border-2 text-lg border-gray-200 rounded-md mt-9 px-2 pt-2 sm:px-5 sm:py-7 ">
+					<div>
+						Address:
+						<p>
+							{order.address?.address} - {order.address?.city} -{' '}
+							{order.address?.postalCode}
+						</p>
+					</div>
 
-			<div>
-				<p>Shipping Price : {shippingPrice} $</p>
-				<p>Tax Price : {taxPrice} $</p>
-				<p>Total Price : {totalPrice} $</p>
-				<button onClick={() => onCreateOrder()}>
-					Place Order{order.items.length === 1 ? null : 's'}{' '}
-				</button>
+					<div>
+						<p>
+							Shipping Price : <span className="text-sm">$</span>
+							{shippingPrice}
+						</p>
+						<p>
+							Tax Price : <span className="text-sm">$</span>
+							{taxPrice}
+						</p>
+						<p className="text-yellow-800 font-semibold text-center mt-3">
+							Total Price : <span className="text-sm">$</span>
+							{totalPrice}
+						</p>
+					</div>
+					<button
+						className="fixed bottom-0 left-0 bg-pink-500 m-0 text-rose-100 py-2 rounded-lg w-full text-center sm:relative sm:mt-5"
+						onClick={() => onCreateOrder()}>
+						Place Order{order.items.length === 1 ? null : 's'}{' '}
+					</button>
+				</div>
 			</div>
 		</div>
 	);
