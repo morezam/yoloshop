@@ -43,8 +43,7 @@ export const userVerify = async (
 				return;
 			}
 
-			// TODO : Change this to production URL
-			const LOGIN_URL = 'http://localhost:5173/login';
+			const LOGIN_URL = 'https://yoloshop.onrender.com/login';
 			res.send(`
 			<div style="display: flex; flex-direction: column; align-items: center">
 			<h1 style="font-size: 45px">

@@ -10,6 +10,7 @@ import { imageSrc } from '@utils/imageSrc';
 import Stars from '@components/Stars';
 import { numFormatter } from '@utils/numberFormatter';
 import Copy from '@components/Copy';
+import FavInProduct from '@components/favorites/FavInProduct';
 
 interface ProductProps {
 	linkCommentRef: MutableRefObject<HTMLDivElement | null>;
@@ -18,13 +19,7 @@ interface ProductProps {
 
 const ProductComponent = ({ linkCommentRef, product }: ProductProps) => {
 	const { user } = useAuthContext();
-	const { data } = useQuery(getFavProducts(user.token as string));
 	const src = imageSrc(product.image);
-
-	const isInFav = useMemo(
-		() => data?.data.find(fav => fav._id === product._id),
-		[data?.data]
-	);
 
 	return (
 		<>
@@ -52,13 +47,8 @@ const ProductComponent = ({ linkCommentRef, product }: ProductProps) => {
 						</p>
 					</div>
 					<div className="flex items-center text-xl justify-center my-3 md:text-2xl">
-						{data && isInFav ? (
-							<DeleteFavorite prodId={product._id}>
-								<FaHeart
-									title="Delete From Favorites"
-									className="fill-red-500 cursor-pointer"
-								/>
-							</DeleteFavorite>
+						{user.token ? (
+							<FavInProduct prodId={product._id} />
 						) : (
 							<AddToFavorites prodId={product._id}>
 								<FaRegHeart

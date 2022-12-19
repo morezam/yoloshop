@@ -10,6 +10,7 @@ import { CommentType } from '@types';
 import { shop } from '@utils/api';
 import { queryClient } from '@utils/queryClient';
 import { numFormatter } from '@utils/numberFormatter';
+import { useNavigate } from 'react-router-dom';
 
 const VoteComponent = ({
 	comment,
@@ -20,6 +21,7 @@ const VoteComponent = ({
 }) => {
 	const { user } = useAuthContext();
 	const key = ['comments', comment.product, sort];
+	const navigate = useNavigate();
 
 	const votedUser = comment.votedUsers.find(
 		votedUser => votedUser._id === user.id
@@ -95,7 +97,7 @@ const VoteComponent = ({
 
 			return { previousComment };
 		},
-		onError: (err, newTodo, context) => {
+		onError: (err, data, context) => {
 			queryClient.setQueryData(key, context?.previousComment);
 		},
 	});
@@ -103,7 +105,11 @@ const VoteComponent = ({
 	return (
 		<div className="text-lg flex items-center sm:justify-end">
 			<div
-				onClick={() => editLike(true)}
+				onClick={() => {
+					user.token
+						? editLike(true)
+						: navigate(`/login?redirect=product/${comment.product}`);
+				}}
 				className={`flex items-center mx-2 px-2  rounded-lg border-2 border-slate-300 cursor-pointer ${
 					votedUser && votedUser.like ? 'bg-slate-300' : ''
 				}`}>
@@ -111,7 +117,11 @@ const VoteComponent = ({
 				<p className="pl-1">{numFormatter(comment.like ? comment.like : 0)}</p>
 			</div>
 			<div
-				onClick={() => editLike(false)}
+				onClick={() => {
+					user.token
+						? editLike(false)
+						: navigate(`/login?redirect=product/${comment.product}`);
+				}}
 				className={`flex items-center mx-2 px-2 rounded-lg border-2 border-slate-300 cursor-pointer ${
 					votedUser ? (votedUser.like ? '' : 'bg-slate-300') : ''
 				} `}>

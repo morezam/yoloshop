@@ -1,7 +1,5 @@
 import { useNavigate, Link } from 'react-router-dom';
-import { useErrorHandler } from 'react-error-boundary';
 import { FaAngleRight } from 'react-icons/fa';
-import CustomErrorBoundary from '@components/CustomErrorBoundary';
 import { useAuthContext } from '@context/authContext';
 import { useMutation } from '@tanstack/react-query';
 import { shop } from '@utils/api';
@@ -45,7 +43,6 @@ const LoginComponent = ({ to }: { to: string }) => {
 		criteriaMode: 'all',
 	});
 	const { setUser } = useAuthContext();
-	const handleError = useErrorHandler();
 
 	const mutation = useMutation({
 		mutationFn: (data: LoginArgs) => {
@@ -55,7 +52,10 @@ const LoginComponent = ({ to }: { to: string }) => {
 			setUser(data.data);
 
 			const query = to.split('=')[1];
+
 			const redirect = query ? `/${query}` : '/';
+
+			console.log({ query, redirect });
 			navigate(redirect);
 		},
 		onError(error: AxiosError<ErrorResponse>) {

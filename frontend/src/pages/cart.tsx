@@ -79,22 +79,24 @@ const Cart = () => {
 							</ProductPreview>
 						))}
 					</ul>
-					{user.token ? (
-						<div className="fixed bottom-0 bg-pink-500 py-2 w-full rounded-lg text-rose-100 text-center sm:text-slate-900 sm:relative sm:bg-transparent sm:w-72 sm:border-2 sm:border-gray-200 sm:rounded-md sm:h-40 sm:my-3 sm:flex sm:flex-col sm:justify-center  ">
-							<p className="text-xl">Total Price: ${totalPrice}</p>
+					<div className="fixed bottom-0 bg-pink-500 py-2 w-full rounded-lg text-rose-100 text-center sm:text-slate-900 sm:relative sm:bg-transparent sm:w-72 sm:border-2 sm:border-gray-200 sm:rounded-md sm:h-40 sm:my-3 sm:flex sm:flex-col sm:justify-center">
+						{user.token ? (
+							<>
+								<p className="text-xl">Total Price: ${totalPrice}</p>
+								<Link
+									to={'/checkout/shipping-address'}
+									className="text-lg sm:bg-pink-500 sm:mx-3 sm:rounded-md sm:py-3 sm:my-4 sm:text-rose-100">
+									Proceed to Checkout
+								</Link>
+							</>
+						) : (
 							<Link
-								to={'/checkout/shipping-address'}
+								to={'/login?redirect=checkout/shipping-address'}
 								className="text-lg sm:bg-pink-500 sm:mx-3 sm:rounded-md sm:py-3 sm:my-4 sm:text-rose-100">
-								Proceed to Checkout
+								Login and Checkout
 							</Link>
-						</div>
-					) : (
-						<Link
-							to={'/login?redirect=checkout/shipping-address'}
-							className="fixed">
-							Login and Checkout
-						</Link>
-					)}
+						)}
+					</div>
 				</div>
 			)}
 		</div>

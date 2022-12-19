@@ -12,6 +12,8 @@ import { notFound, errorHandler } from './middleware/errorMiddleware';
 
 dotenv.config();
 
+const PORT = process.env.port || 5000;
+
 dbConnect();
 const app = express();
 
@@ -27,9 +29,19 @@ app.use('/upload', uploadRoutes);
 const __customDirName = path.resolve();
 app.use('/uploads', express.static(path.join(__customDirName, '/uploads')));
 
+if (process.env.NODE_ENV === 'production') {
+	app.use(express.static(path.join(__customDirName, '/frontend/dist')));
+
+	app.get('*', (req, res) =>
+		res.sendFile(
+			path.resolve(__customDirName, 'frontend', 'dist', 'index.html')
+		)
+	);
+}
+
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(5000, () => {
+app.listen(PORT, () => {
 	console.log('Server is listening...');
 });

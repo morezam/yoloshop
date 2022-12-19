@@ -37,9 +37,11 @@ const Orders = ({ orders, setDelivered }: OrderProps) => {
 								<Td>{i + 1}</Td>
 								<Td btn>
 									<Link
-										to={`/user/profile/${!setDelivered && `${user.id}/`}order/${
-											order._id
-										}`}>
+										to={
+											setDelivered
+												? `/user/profile/order/${order._id}`
+												: `/user/profile/${user.id}/order/${order._id}`
+										}>
 										Order Detail
 									</Link>
 								</Td>

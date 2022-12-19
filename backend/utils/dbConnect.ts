@@ -2,8 +2,6 @@ import mongoose from 'mongoose';
 
 export const dbConnect = async () => {
 	try {
-		// TODO: Change this url to production url
-		// await mongoose.connect('mongodb://0.0.0.0:27017/shop');
 		await mongoose.connect(process.env.MONGODB_URL);
 		console.log(`mongodb is connected`);
 	} catch (error) {

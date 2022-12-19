@@ -1,12 +1,11 @@
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import Btn from '@components/Btn';
 import Input from '@components/Input';
 import Nav from '@components/Nav';
-import { useAuthContext } from '@context/authContext';
 import { useOrderContext } from '@context/orderContext';
 import FormLayout from '@layouts/FormLayout';
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
 
 interface Address {
 	address: string;
@@ -15,7 +14,6 @@ interface Address {
 }
 
 const ShippingAddressPage = () => {
-	const { user } = useAuthContext();
 	const { order, setOrder } = useOrderContext();
 
 	const {
@@ -31,13 +29,7 @@ const ShippingAddressPage = () => {
 		},
 	});
 
-	const navigate = useNavigate();
-
 	useEffect(() => {
-		if (!user.token) {
-			navigate('/login?redirect=checkout/shipping-address');
-		}
-
 		if (order.address) {
 			reset(order.address);
 		}

@@ -6,6 +6,7 @@ import { useMutation } from '@tanstack/react-query';
 import { shop } from '@utils/api';
 import { queryClient } from '@utils/queryClient';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 
 interface CreateCommentData {
 	rating: number;
@@ -111,7 +112,13 @@ const CreateComment = ({
 					rows={4}></textarea>
 				<p className="text-rose-500">{errors.text?.message}</p>
 				<Btn disabled={!isDirty} styling="my-4">
-					Submit
+					{user.token ? (
+						'Submit'
+					) : (
+						<Link to={`/login?redirect=product/${prodId}`}>
+							Login and create
+						</Link>
+					)}
 				</Btn>
 			</form>
 		</FormLayout>

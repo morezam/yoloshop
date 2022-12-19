@@ -1,4 +1,3 @@
-import CustomErrorBoundary from '@components/CustomErrorBoundary';
 import LoginComponent from '@components/userSign/Login';
 import { useLocation } from 'react-router-dom';
 

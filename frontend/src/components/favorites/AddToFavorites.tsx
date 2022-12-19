@@ -2,6 +2,7 @@ import { useAuthContext } from '@context/authContext';
 import { useMutation } from '@tanstack/react-query';
 import { shop } from '@utils/api';
 import { queryClient } from '@utils/queryClient';
+import { useNavigate } from 'react-router-dom';
 
 const AddToFavorites = ({
 	prodId,
@@ -13,6 +14,7 @@ const AddToFavorites = ({
 	const { user } = useAuthContext();
 
 	const key = ['favorites'];
+	const navigate = useNavigate();
 
 	const { mutate } = useMutation({
 		mutationFn: () => {
@@ -48,7 +50,18 @@ const AddToFavorites = ({
 		mutate();
 	};
 
-	return <div onClick={() => onAddToFavs()}>{children}</div>;
+	return (
+		<div
+			onClick={() => {
+				if (!user.token) {
+					navigate(`/login?redirect=product/${prodId}`);
+				} else {
+					onAddToFavs();
+				}
+			}}>
+			{children}
+		</div>
+	);
 };
 
 export default AddToFavorites;

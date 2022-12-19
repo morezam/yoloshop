@@ -7,11 +7,12 @@ import ShowFavorites, { Favorite } from '@components/favorites/ShowFavorites';
 import { useMemo, useState } from 'react';
 import Pagination from '@components/pagination';
 import UserNav from '@components/user/UserNav';
+import NotFound from '@components/NotFound';
 
 export const getFavProducts = (token: string) => ({
 	queryKey: ['favorites'],
 	queryFn: async () => {
-		return shop.get<Favorite[]>(`/user/favorites`, {
+		return shop.get<Favorite[]>('/user/favorites', {
 			headers: {
 				authorization: `Bearer ${token}`,
 			},
@@ -59,7 +60,7 @@ const Favorites = () => {
 						/>
 					</>
 				) : (
-					<div>You have no Favorite products</div>
+					<NotFound>You have no Favorite products</NotFound>
 				)
 			) : null}
 		</>
