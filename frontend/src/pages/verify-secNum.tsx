@@ -11,6 +11,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import FormLayout from '@layouts/FormLayout';
 import Input from '@components/Input';
 import Btn from '@components/Btn';
+import Spinner from '@components/spinner';
 
 type ErrorRes = AxiosError<{
 	message: string;
@@ -42,7 +43,7 @@ const VerifySecNum = () => {
 		},
 	});
 
-	const { mutate: mutatePassword, data: passwordData } = useMutation({
+	const changePassword = useMutation({
 		mutationFn: (password: string) => {
 			return shop.post('/user/change-password-login', { email, password });
 		},
@@ -53,12 +54,12 @@ const VerifySecNum = () => {
 	};
 
 	const onSubmitPassword = ({ password }: { password: string }) => {
-		mutatePassword(password);
+		changePassword.mutate(password);
 	};
 
 	useEffect(() => {
 		let timer: NodeJS.Timeout;
-		if (passwordData?.status === 200) {
+		if (changePassword.data?.status === 200) {
 			timer = setTimeout(() => {
 				navigate('/login');
 			}, 3000);
@@ -67,7 +68,7 @@ const VerifySecNum = () => {
 		return () => {
 			clearTimeout(timer);
 		};
-	}, [passwordData]);
+	}, [changePassword.data]);
 
 	return (
 		<CustomErrorBoundary>
@@ -86,7 +87,7 @@ const VerifySecNum = () => {
 					/>
 
 					<Btn disabled={success} styling="my-4">
-						Submit
+						{isLoading ? <Spinner /> : 'Submit'}
 					</Btn>
 				</form>
 
@@ -96,9 +97,7 @@ const VerifySecNum = () => {
 					</p>
 				) : null}
 
-				{isLoading ? (
-					<div>Loading...</div>
-				) : success ? (
+				{success ? (
 					<>
 						<h2 className="text-center text-xl mt-3 mb-5">
 							Please Enter your new Password
@@ -106,9 +105,8 @@ const VerifySecNum = () => {
 						<form
 							className="flex flex-col"
 							onSubmit={handleSubmit(onSubmitPassword)}>
-							<label htmlFor="newPassword">New Password: </label>
 							<PasswordInput
-								id="newPassword"
+								label="New Password"
 								{...register('password', {
 									required: true,
 									pattern: {
@@ -118,9 +116,13 @@ const VerifySecNum = () => {
 									},
 								})}
 							/>
-							<Btn styling="my-4">Change Password</Btn>
+							<Btn
+								disabled={changePassword.data?.data || changePassword.isLoading}
+								styling="my-4">
+								{changePassword.isLoading ? <Spinner /> : 'Change Password'}
+							</Btn>
 						</form>
-						{passwordData ? <div>{passwordData.data}</div> : null}
+						{changePassword ? <div>{changePassword.data?.data}</div> : null}
 					</>
 				) : null}
 			</FormLayout>

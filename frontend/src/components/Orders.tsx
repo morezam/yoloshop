@@ -1,9 +1,11 @@
+import { useAuthContext } from '@context/authContext';
 import TableLayout, { Td } from '@layouts/TableLayout';
 import { OrderType } from '@types';
 import { useErrorHandler } from 'react-error-boundary';
 import { Link } from 'react-router-dom';
 import AdminNav from './adminProfile/AdminNav';
 import Copy from './Copy';
+import NotFound from './NotFound';
 
 interface OrderProps {
 	orders: OrderType<string>[];
@@ -12,11 +14,12 @@ interface OrderProps {
 
 const Orders = ({ orders, setDelivered }: OrderProps) => {
 	const handleError = useErrorHandler();
+	const { user } = useAuthContext();
 
 	return (
 		<>
 			{orders.length === 0 ? (
-				<p className="text-center text-xl">No Orders Found</p>
+				<NotFound>No Orders Found</NotFound>
 			) : (
 				<TableLayout
 					headers={[
@@ -33,7 +36,10 @@ const Orders = ({ orders, setDelivered }: OrderProps) => {
 							<tr key={order._id}>
 								<Td>{i + 1}</Td>
 								<Td btn>
-									<Link to={`/user/profile/order/${order._id}`}>
+									<Link
+										to={`/user/profile/${!setDelivered && `${user.id}/`}order/${
+											order._id
+										}`}>
 										Order Detail
 									</Link>
 								</Td>
@@ -60,7 +66,9 @@ const Orders = ({ orders, setDelivered }: OrderProps) => {
 									<Td onClick={() => setDelivered(order._id)} btn>
 										{order.isDelivered ? 'Delivered' : 'Not Delivered'}
 									</Td>
-								) : null}
+								) : (
+									<Td>{order.isDelivered ? 'Delivered' : 'Not Delivered'}</Td>
+								)}
 							</tr>
 						);
 					})}

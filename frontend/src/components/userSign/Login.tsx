@@ -12,6 +12,8 @@ import PasswordInput from '@components/PasswordInput';
 import FormLayout from '@layouts/FormLayout';
 import Input from '@components/Input';
 import Btn from '@components/Btn';
+import ErrorMessage from '@components/ErrorMessage';
+import Spinner from '@components/spinner';
 
 interface LoginResponse {
 	id: string;
@@ -57,7 +59,7 @@ const LoginComponent = ({ to }: { to: string }) => {
 			navigate(redirect);
 		},
 		onError(error: AxiosError<ErrorResponse>) {
-			handleError(error.response?.data);
+			console.log(error);
 		},
 	});
 
@@ -70,20 +72,43 @@ const LoginComponent = ({ to }: { to: string }) => {
 			<Nav />
 			<FormLayout title="Login To Your Account" styling="max-w-md">
 				<form className="flex flex-col" onSubmit={handleSubmit(onFormSubmit)}>
-					<Input label="Email" type="email" {...register('email')} />
-
-					<label htmlFor="password">Password : </label>
-					<PasswordInput
-						id="password"
-						{...register('password', { required: true })}
+					<Input
+						label="Email"
+						type="email"
+						{...register('email', {
+							required: {
+								value: true,
+								message: 'This Field is required',
+							},
+						})}
+						error={errors.email?.message}
 					/>
-					<Btn styling="my-4">Login</Btn>
+
+					<PasswordInput
+						label="Password"
+						error={errors.password?.message}
+						{...register('password', {
+							required: {
+								value: true,
+								message: 'This Field is required',
+							},
+						})}
+					/>
+					<Btn styling="my-4" disabled={mutation.isLoading}>
+						{mutation.isLoading ? <Spinner /> : 'Login'}
+					</Btn>
 					<Link
 						to={'/password-reset'}
 						className="w-full flex items-center justify-center px-2 pb-1 pt-5 hover:text-slate-300 rounded-md">
 						Forgot Your Password?{' '}
 						<FaAngleRight className="fill-slate-600 hover:fill-slate-900" />
 					</Link>
+					{mutation.isError ? (
+						<ErrorMessage
+							error={mutation.error}
+							styling="text-center text-lg"
+						/>
+					) : null}
 				</form>
 			</FormLayout>
 		</>

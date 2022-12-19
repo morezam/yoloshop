@@ -19,18 +19,7 @@ export const userRegister = async (
 			return;
 		}
 
-		const newUser = await User.create({
-			name,
-			email,
-			password,
-			isAdmin: isAdmin ? isAdmin : false,
-		});
-
-		const sent = await verificationEmail(
-			newUser._id,
-			newUser.email,
-			newUser.name
-		);
+		const sent = await verificationEmail(email, name);
 
 		if (!sent) {
 			res.status(400);
@@ -38,8 +27,14 @@ export const userRegister = async (
 			return;
 		}
 
+		await User.create({
+			name,
+			email,
+			password,
+			isAdmin: isAdmin ? isAdmin : false,
+		});
 		res.send(
-			`Verification Email was sent to ${newUser.email} please check your inbox and verify your email`
+			`Verification Email was sent to ${email} please check your inbox and verify your email`
 		);
 	} catch (error) {
 		res.status(500);

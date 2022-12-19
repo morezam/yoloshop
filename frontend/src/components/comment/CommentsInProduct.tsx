@@ -10,6 +10,9 @@ import VoteComponent from './VoteComponent';
 import { FaTrash } from 'react-icons/fa';
 import DeleteComment from './DeleteComment';
 import { MutableRefObject, useState } from 'react';
+import DeleteModal from '@components/modals/DeleteModal';
+import Btn from '@components/Btn';
+import CommentSkeleton from '@components/skeletons/CommentSkeleton';
 
 dayjs.extend(relativeTime);
 
@@ -21,8 +24,9 @@ interface CommentsIPProps {
 const CommentsInProduct = ({ commentRef, prodId }: CommentsIPProps) => {
 	const { user } = useAuthContext();
 	const [sort, setSort] = useState<string | null>('');
+	const [isOpen, setOpen] = useState(false);
 
-	const { data, refetch } = useQuery({
+	const { data, refetch, isLoading } = useQuery({
 		queryKey: ['comments', prodId, sort],
 		queryFn: () => {
 			return shop.get<CommentType<string>[]>(
@@ -54,6 +58,12 @@ const CommentsInProduct = ({ commentRef, prodId }: CommentsIPProps) => {
 					</option>
 				))}
 			</select>
+			{isLoading && (
+				<ul>
+					<CommentSkeleton />
+					<CommentSkeleton />
+				</ul>
+			)}
 			<ul>
 				{data &&
 					data.data.map(comment => {
@@ -61,19 +71,17 @@ const CommentsInProduct = ({ commentRef, prodId }: CommentsIPProps) => {
 							<li
 								key={comment._id}
 								className="rounded-md my-2 shadow-xl pl-4 bg-gray-100 py-3">
-								<div className="flex items-center py-2 justify-around border-b-2 border-b-gray-200 sm:justify-between sm:px-3">
+								<div className="flex items-center py-2  border-b-2 border-b-gray-200 sm:justify-between sm:px-3">
 									<div className="sm:flex sm:items-center">
 										<p className="pr-5">{comment.userName}</p>
 										<Stars rating={comment.rating} />
 									</div>
 									{user.isAdmin ? (
-										<div className="cursor-pointer" title="Delete This Comment">
-											<DeleteComment
-												id={comment._id}
-												prodId={comment.product}
-												refetch={refetch}>
-												<FaTrash className="text-red-500" />
-											</DeleteComment>
+										<div
+											onClick={() => setOpen(true)}
+											className="cursor-pointer"
+											title="Delete This Comment">
+											<FaTrash className="text-red-500" />
 										</div>
 									) : null}
 								</div>
@@ -84,6 +92,16 @@ const CommentsInProduct = ({ commentRef, prodId }: CommentsIPProps) => {
 										{dayjs(comment.createdAt).fromNow()}
 									</p>
 								</div>
+								<DeleteModal isOpen={isOpen} setOpen={setOpen}>
+									<DeleteComment
+										id={comment._id}
+										prodId={comment.product}
+										refetch={refetch}>
+										<Btn styling="bg-transparent text-red-500 hover:bg-transparent">
+											Delete
+										</Btn>
+									</DeleteComment>
+								</DeleteModal>
 							</li>
 						);
 					})}

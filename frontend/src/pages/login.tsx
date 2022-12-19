@@ -5,11 +5,7 @@ import { useLocation } from 'react-router-dom';
 const Login = () => {
 	const location = useLocation();
 
-	return (
-		<CustomErrorBoundary>
-			<LoginComponent to={location.search} />
-		</CustomErrorBoundary>
-	);
+	return <LoginComponent to={location.search} />;
 };
 
 export default Login;

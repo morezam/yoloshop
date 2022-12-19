@@ -1,6 +1,7 @@
 import Btn from '@components/Btn';
 import Input from '@components/Input';
 import Nav from '@components/Nav';
+import Spinner from '@components/spinner';
 import FormLayout from '@layouts/FormLayout';
 import { useMutation } from '@tanstack/react-query';
 import { shop } from '@utils/api';
@@ -40,24 +41,20 @@ const ForgetPassword = () => {
 	return (
 		<>
 			<Nav />
-			{isLoading ? (
-				<div>Loading...</div>
-			) : (
-				<FormLayout title="Please Enter your Email" styling="max-w-md">
-					<form
-						className="flex flex-col"
-						onSubmit={handleSubmit(onSubmitEmail)}>
-						<Input
-							label="Email"
-							type="email"
-							{...register('email', {
-								required: true,
-							})}
-						/>
-						<Btn styling="my-4">Send Security Number</Btn>
-					</form>
-				</FormLayout>
-			)}
+			<FormLayout title="Please Enter your Email" styling="max-w-md">
+				<form className="flex flex-col" onSubmit={handleSubmit(onSubmitEmail)}>
+					<Input
+						label="Email"
+						type="email"
+						{...register('email', {
+							required: true,
+						})}
+					/>
+					<Btn styling="my-4" disabled={isLoading}>
+						{isLoading ? <Spinner /> : 'Send Security Number'}
+					</Btn>
+				</form>
+			</FormLayout>
 		</>
 	);
 };

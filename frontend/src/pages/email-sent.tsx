@@ -1,3 +1,6 @@
+import Btn from '@components/Btn';
+import { useMutation } from '@tanstack/react-query';
+import { shop } from '@utils/api';
 import { useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
@@ -16,6 +19,12 @@ const EmailSent = () => {
 		}
 	}, [email]);
 
+	const mutation = useMutation({
+		mutationFn: () => {
+			return shop.get<string>(`/resend-verification-email?email=${email}`);
+		},
+	});
+
 	return (
 		<div className="flex text-center flex-col items-center max-w-lg p-5 mx-auto  mt-6 text-lg border-2 border-slate-600 rounded-md">
 			<p>
@@ -29,6 +38,11 @@ const EmailSent = () => {
 				</Link>{' '}
 				again
 			</p>
+			<p className="mt-3">
+				If you didn't receive any email:
+				<Btn onClick={() => mutation.mutate()}>Resend Verification Email</Btn>
+			</p>
+			<p>{mutation.data && mutation.data.data}</p>
 		</div>
 	);
 };

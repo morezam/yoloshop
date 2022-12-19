@@ -18,19 +18,8 @@ const ProductForm = ({ onSubmit, initial, children }: ProductFormProps) => {
 		handleSubmit,
 		reset,
 		setValue,
-		formState: { isDirty },
-	} = useForm<ProductType<string>>({
-		defaultValues: {
-			name: '',
-			price: 0,
-			quantity: 0,
-			countInStock: 0,
-			description: '',
-			brand: '',
-			category: '',
-			image: '',
-		},
-	});
+		formState: { isDirty, errors },
+	} = useForm<ProductType<string>>();
 
 	useEffect(() => {
 		reset({
@@ -62,6 +51,7 @@ const ProductForm = ({ onSubmit, initial, children }: ProductFormProps) => {
 			console.error(error);
 		}
 	};
+	const required = { value: true, message: 'This Field is Required' };
 
 	return (
 		<FormLayout
@@ -70,28 +60,46 @@ const ProductForm = ({ onSubmit, initial, children }: ProductFormProps) => {
 			<form
 				className="flex flex-col sm:grid sm:grid-cols-2 sm:gap-x-4"
 				onSubmit={handleSubmit(onSubmit)}>
-				<Input label="Name" {...register('name')} />
-				<Input type="number" label="Price" {...register('price')} />
-				<Input type="number" label="Quantity" {...register('quantity')} />
+				<Input label="Name" {...register('name', { required })} />
 				<Input
 					type="number"
-					label="Count In stock"
-					{...register('countInStock')}
+					label="Price"
+					min={0}
+					{...register('price', { required })}
+					error={errors.name?.message}
 				/>
-				<Input label="Brand" {...register('brand')} />
+				<Input
+					type="number"
+					label="Quantity"
+					min={0}
+					{...register('quantity', { required })}
+					error={errors.quantity?.message}
+				/>
+				<Input
+					type="number"
+					min={0}
+					label="Count In stock"
+					{...register('countInStock', { required })}
+					error={errors.countInStock?.message}
+				/>
+				<Input
+					label="Brand"
+					{...register('brand', { required })}
+					error={errors.brand?.message}
+				/>
 				<div className="flex flex-col col-start-1 col-end-3">
 					<label htmlFor="description">Description :</label>
 					<textarea
-						{...register('description')}
+						{...register('description', { required })}
 						spellCheck={false}
 						className="my-2 h-48 text-slate-900 focus:ring-0 focus:outline-0 px-2 py-1 rounded-md"
 					/>
 				</div>
-				<Input label="Category" {...register('category')} />
+				<Input label="Category" {...register('category', { required })} />
 				<Input
 					label="Image"
 					styling="relative overflow-hidden"
-					{...register('image')}
+					{...register('image', { required })}
 					inner={
 						<div className="absolute right-24 top-[2.16rem] w-0">
 							<input

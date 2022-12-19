@@ -4,7 +4,6 @@ import { shop } from '@utils/api';
 import { queryClient } from '@utils/queryClient';
 import { ProductType } from '@types';
 import ProductDetailsComponent from '@components/adminProfile/ProductDetailsComponent';
-import DeleteProduct from '@components/product/DeleteProduct';
 import CustomErrorBoundary from '@components/CustomErrorBoundary';
 import AdminNav from '@components/adminProfile/AdminNav';
 import Back from '@components/Back';

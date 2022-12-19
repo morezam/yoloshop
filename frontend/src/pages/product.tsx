@@ -1,3 +1,4 @@
+import Skeleton from 'react-loading-skeleton';
 import { lazy, Suspense, useEffect, useRef, MutableRefObject } from 'react';
 import { LoaderFunction, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -7,6 +8,7 @@ import { shop } from '@utils/api';
 import { queryClient } from '@utils/queryClient';
 import CartActions from '@components/product/CartActions';
 import Nav from '@components/Nav';
+import Spinner from '@components/spinner';
 
 const Comments = lazy(() => import('@components/comment/CommentsInProduct'));
 
@@ -28,7 +30,7 @@ export const productLoader: LoaderFunction = async ({ params }) => {
 
 const Product = () => {
 	const params = useParams();
-	const { data } = useQuery(getProduct(params.id as string));
+	const { data, isLoading } = useQuery(getProduct(params.id as string));
 	const linkCommentRef: MutableRefObject<HTMLDivElement | null> = useRef(null);
 	const commentRef: MutableRefObject<HTMLDivElement | null> = useRef(null);
 
@@ -43,6 +45,7 @@ const Product = () => {
 	return (
 		<>
 			<Nav />
+			{isLoading && <Spinner />}
 			<div className="relative mb-20 sm:max-w-4xl xl:max-w-6xl sm:px-10 sm:mx-auto">
 				{data && (
 					<ProductComponent
@@ -50,6 +53,7 @@ const Product = () => {
 						product={data.data}
 					/>
 				)}
+
 				<Suspense fallback={<p>Loading...</p>}>
 					<Comments commentRef={commentRef} prodId={params.id as string} />
 				</Suspense>

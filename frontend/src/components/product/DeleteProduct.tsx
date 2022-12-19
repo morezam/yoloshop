@@ -1,17 +1,22 @@
-import Btn from '@components/Btn';
 import { useAuthContext } from '@context/authContext';
 import { useMutation } from '@tanstack/react-query';
 import { shop } from '@utils/api';
+import { queryClient } from '@utils/queryClient';
 import { useNavigate } from 'react-router-dom';
 
 interface DeleteProductProps {
 	id: string;
-	to?: string;
+	onSuccess?: any;
 	image: string;
 	children: React.ReactNode;
 }
 
-const DeleteProduct = ({ id, to, image, children }: DeleteProductProps) => {
+const DeleteProduct = ({
+	id,
+	image,
+	onSuccess,
+	children,
+}: DeleteProductProps) => {
 	const { user } = useAuthContext();
 	const navigate = useNavigate();
 
@@ -24,7 +29,9 @@ const DeleteProduct = ({ id, to, image, children }: DeleteProductProps) => {
 			});
 		},
 		onSuccess() {
-			to ? navigate(to, { replace: true }) : null;
+			onSuccess
+				? onSuccess()
+				: navigate('/user/profile/products', { replace: true });
 		},
 	});
 

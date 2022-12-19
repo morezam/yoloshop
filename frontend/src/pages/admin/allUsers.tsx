@@ -7,6 +7,9 @@ import { useState } from 'react';
 import Pagination from '@components/pagination';
 import AdminNav from '@components/adminProfile/AdminNav';
 import TableLayout from '@layouts/TableLayout';
+import DeleteModal from '@components/modals/DeleteModal';
+import Btn from '@components/Btn';
+import NotFound from '@components/NotFound';
 
 interface ResponseData {
 	users: UserType<string>[];
@@ -36,7 +39,7 @@ const AllUsers = () => {
 		<>
 			<AdminNav />
 
-			{data ? (
+			{data && data.data.users.length !== 0 ? (
 				<>
 					<TableLayout
 						headers={[
@@ -48,11 +51,9 @@ const AllUsers = () => {
 							'Admin',
 							'Delete',
 						]}>
-						{users
-							? users.map((user, i) => {
-									return <UserComponent key={user._id} user={user} index={i} />;
-							  })
-							: null}
+						{data.data.users.map((user, i) => {
+							return <UserComponent key={user._id} user={user} index={i} />;
+						})}
 					</TableLayout>
 					<Pagination
 						currentPage={page}
@@ -61,7 +62,9 @@ const AllUsers = () => {
 						onPageChange={page => setPage(page as number)}
 					/>
 				</>
-			) : null}
+			) : (
+				<NotFound>No Users Found</NotFound>
+			)}
 		</>
 	);
 };

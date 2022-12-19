@@ -1,5 +1,6 @@
 import Orders from '@components/Orders';
 import Pagination from '@components/pagination';
+import Spinner from '@components/spinner';
 import UserNav from '@components/user/UserNav';
 import { useAuthContext } from '@context/authContext';
 import { useQuery } from '@tanstack/react-query';
@@ -32,6 +33,7 @@ const UserOrders = () => {
 			{data ? (
 				<>
 					<UserNav />
+					{isLoading && <Spinner />}
 					<Orders orders={data.data.orders} />
 					<Pagination
 						currentPage={page}

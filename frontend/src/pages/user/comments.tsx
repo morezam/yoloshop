@@ -1,5 +1,6 @@
 import Comments from '@components/comment/CommentsInProfile';
 import Pagination from '@components/pagination';
+import Spinner from '@components/spinner';
 import UserNav from '@components/user/UserNav';
 import { useAuthContext } from '@context/authContext';
 import { useQuery } from '@tanstack/react-query';
@@ -17,7 +18,7 @@ const UserComments = () => {
 	const [page, setPage] = useState(1);
 	const { user } = useAuthContext();
 	const params = useParams();
-	const { data } = useQuery({
+	const { data, isLoading } = useQuery({
 		queryKey: ['userComments', page],
 		queryFn: () => {
 			return shop.get<PaginatedComments>(
@@ -33,9 +34,10 @@ const UserComments = () => {
 
 	return (
 		<div>
+			<UserNav />
+			{isLoading && <Spinner />}
 			{data ? (
 				<>
-					<UserNav />
 					<Comments comments={data.data.comments} />
 					<Pagination
 						currentPage={page}

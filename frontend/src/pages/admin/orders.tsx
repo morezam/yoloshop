@@ -6,6 +6,7 @@ import { useAuthContext } from '@context/authContext';
 import { OrderType } from '@types';
 import { shop } from '@utils/api';
 import AdminNav from '@components/adminProfile/AdminNav';
+import Spinner from '@components/spinner';
 
 interface PaginatedOrders {
 	pages: number;
@@ -59,6 +60,7 @@ const AllOrders = () => {
 			{data ? (
 				<>
 					<AdminNav />
+					{isLoading && <Spinner />}
 					<Orders orders={data.data.orders} setDelivered={setDelivered} />
 					<Pagination
 						currentPage={page}

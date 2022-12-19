@@ -1,13 +1,9 @@
 import jwt from 'jsonwebtoken';
 import { transporter } from './createTransporter';
 
-export const verificationEmail = async (
-	userId: string,
-	to: string,
-	name: string
-) => {
+export const verificationEmail = async (to: string, name: string) => {
 	const token_mail_verification = jwt.sign(
-		{ id: userId },
+		{ email: to },
 		process.env.JWT_SECRET_MAIL,
 		{
 			expiresIn: '1d',
@@ -16,9 +12,12 @@ export const verificationEmail = async (
 
 	// TODO: Change this url to production url
 	const url = `http://localhost:5000/user/verify?id=${token_mail_verification}`;
+	console.log(
+		`from : ${process.env.NODEMAILER_AUTH_USER} to : ${to} url: ${url}`
+	);
 
 	const mailOptions = {
-		from: process.env.NODEMAILER_FROM,
+		from: process.env.NODEMAILER_AUTH_USER,
 		to,
 		subject: 'Yolo Shop Account Verification',
 		html: `
@@ -52,6 +51,7 @@ export const verificationEmail = async (
 		await transporter.sendMail(mailOptions);
 		return true;
 	} catch (error) {
+		console.log(error);
 		return false;
 	}
 };

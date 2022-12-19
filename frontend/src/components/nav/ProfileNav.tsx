@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from 'react-icons/ai';
 
-const ProfileNav = ({ children }: { children: React.ReactNode }) => {
+const ProfileNav = memo(({ children }: { children: React.ReactNode }) => {
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -21,6 +21,6 @@ const ProfileNav = ({ children }: { children: React.ReactNode }) => {
 			</div>
 		</nav>
 	);
-};
+});
 
 export default ProfileNav;

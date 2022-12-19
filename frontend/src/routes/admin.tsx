@@ -35,7 +35,7 @@ export const adminRoutes: RouteObject[] = [
 		element: <AllOrders />,
 	},
 	{
-		path: '/user/profile/order/:id',
+		path: '/user/profile/order/:orderId',
 		element: <OrderDetails />,
 	},
 ];

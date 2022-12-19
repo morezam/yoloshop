@@ -6,6 +6,10 @@ import { shop } from '@utils/api';
 import { queryClient } from '@utils/queryClient';
 import { FaTrash } from 'react-icons/fa';
 import Copy from '@components/Copy';
+import DeleteModal from '@components/modals/DeleteModal';
+import Btn from '@components/Btn';
+import { useState } from 'react';
+import Spinner from '@components/spinner';
 
 interface ChangeAdminArgs {
 	name: string;
@@ -21,8 +25,9 @@ const UserComponent = ({
 	index: number;
 }) => {
 	const { user: authUser } = useAuthContext();
+	const [isOpen, setOpen] = useState(false);
 
-	const { mutate: deleteUser } = useMutation({
+	const deleteUser = useMutation({
 		mutationFn: (id: string) => {
 			return shop.delete(`/user/${id}`, {
 				headers: {
@@ -76,10 +81,22 @@ const UserComponent = ({
 					styling="whitespace-nowrap">
 					{user.isAdmin ? 'Admin' : 'Normal User'}
 				</Td>
-				<Td onClick={() => deleteUser(user._id)} btn>
+				<Td onClick={() => setOpen(true)} btn>
 					<FaTrash className="inline-block text-rose-600" />
 				</Td>
 			</tr>
+			<DeleteModal isOpen={isOpen} setOpen={setOpen}>
+				<div>
+					<Btn
+						onClick={() => {
+							deleteUser.mutate(user._id);
+							deleteUser.isSuccess && setOpen(false);
+						}}
+						styling="text-red-500 hover:bg-transparent bg-transparent">
+						{deleteUser.isLoading ? <Spinner /> : 'Delete'}
+					</Btn>
+				</div>
+			</DeleteModal>
 		</>
 	);
 };

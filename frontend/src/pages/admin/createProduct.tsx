@@ -5,6 +5,7 @@ import { useAuthContext } from '@context/authContext';
 import { ProductType } from '@types';
 import ProductForm from '@components/product/ProductForm';
 import AdminNav from '@components/adminProfile/AdminNav';
+import Spinner from '@components/spinner';
 
 const CreateProduct = () => {
 	const { user } = useAuthContext();
@@ -14,7 +15,7 @@ const CreateProduct = () => {
 		navigate(`/user/profile/${user.id}`);
 	}
 
-	const { mutate } = useMutation({
+	const { mutate, isLoading } = useMutation({
 		mutationFn: (newProduct: ProductType<string>) => {
 			return shop.post('/products', newProduct, {
 				headers: {
@@ -34,7 +35,7 @@ const CreateProduct = () => {
 	return (
 		<>
 			<AdminNav />
-			<ProductForm onSubmit={onCreateProduct} />
+			{isLoading ? <Spinner /> : <ProductForm onSubmit={onCreateProduct} />}
 		</>
 	);
 };

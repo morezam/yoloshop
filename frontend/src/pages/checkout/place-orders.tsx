@@ -31,7 +31,7 @@ const PlaceOrdersPage = () => {
 		},
 		onSuccess(data) {
 			setOrder(oldOrder => ({ ...oldOrder, items: [] }));
-			navigate(`/checkout/pay-orders/${data.data._id}`);
+			navigate(`/user/profile/${user.id}/orders`);
 		},
 	});
 

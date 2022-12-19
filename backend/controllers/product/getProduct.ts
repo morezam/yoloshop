@@ -104,7 +104,7 @@ export const getCommentsByProductId = async (
 		if (reqFilter === 'most-recent') {
 			comments = product.comments.sort((a, b) => +b.createdAt - +a.createdAt);
 		} else if (reqFilter === 'most-favorites') {
-			comments = product.comments.sort((a, b) => +a.like + +b.like);
+			comments = product.comments.sort((a, b) => +b.like - +a.like);
 		} else {
 			comments = product.comments;
 		}

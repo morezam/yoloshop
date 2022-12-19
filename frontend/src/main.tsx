@@ -7,6 +7,7 @@ import { routes } from '@routes/index';
 import { queryClient } from '@utils/queryClient';
 import './index.css';
 import { OrderContextProvider } from '@context/orderContext';
+import Spinner from '@components/spinner';
 
 const router = createBrowserRouter(routes);
 
@@ -15,10 +16,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 		<QueryClientProvider client={queryClient}>
 			<AuthContextProvider>
 				<OrderContextProvider>
-					<RouterProvider
-						router={router}
-						fallbackElement={<div>Loading...</div>}
-					/>
+					<RouterProvider router={router} fallbackElement={<Spinner />} />
 				</OrderContextProvider>
 			</AuthContextProvider>
 		</QueryClientProvider>

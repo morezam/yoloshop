@@ -1,7 +1,9 @@
 import Btn from '@components/Btn';
+import ErrorMessage from '@components/ErrorMessage';
 import Input from '@components/Input';
 import Nav from '@components/Nav';
 import PasswordInput from '@components/PasswordInput';
+import Spinner from '@components/spinner';
 import FormLayout from '@layouts/FormLayout';
 import { useMutation } from '@tanstack/react-query';
 import { shop } from '@utils/api';
@@ -27,7 +29,6 @@ const SignupComponent = () => {
 		register,
 		handleSubmit,
 		setError,
-		trigger,
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
@@ -40,7 +41,7 @@ const SignupComponent = () => {
 	});
 	const handleError = useErrorHandler();
 
-	const { mutate, isLoading } = useMutation({
+	const mutation = useMutation({
 		mutationFn: (data: SignUpArgs) => {
 			return shop.post('/user', data);
 		},
@@ -60,32 +61,41 @@ const SignupComponent = () => {
 			});
 			return;
 		}
-		mutate(data);
+		mutation.mutate(data);
 	};
+
+	const required = { value: true, message: 'This Field is Required' };
 
 	return (
 		<>
 			<Nav />
 			<FormLayout title="Create A New Account :" styling="max-w-md">
 				<form className="flex flex-col" onSubmit={handleSubmit(onFormSubmit)}>
-					<Input label="Name" {...register('name', { required: true })} />
+					<Input
+						label="Name"
+						{...register('name', {
+							required,
+						})}
+						error={errors.name?.message}
+					/>
 					<Input
 						label="Email"
 						type="email"
 						{...register('email', {
-							required: true,
+							required,
 							pattern: {
 								value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
 								message: 'Email Is Not Valid',
 							},
 						})}
+						error={errors.email?.message}
 					/>
 
-					<label htmlFor="password">Password :</label>
 					<PasswordInput
-						id="password"
+						label="Password"
+						error={errors.password?.message}
 						{...register('password', {
-							required: true,
+							required,
 							pattern: {
 								value: /^(?=.*\d)(?=.*[a-z])(?=.*[!@#$%^&*]).{8,}$/,
 								message:
@@ -94,15 +104,18 @@ const SignupComponent = () => {
 						})}
 					/>
 
-					<label htmlFor="passwordAgain">Password Again :</label>
 					<PasswordInput
-						id="passwordAgain"
+						error={errors.passwordAgain?.message}
+						label="Password Again"
 						{...register('passwordAgain', {
-							required: true,
+							required,
 						})}
 					/>
-					<Btn styling="my-4">Signup</Btn>
+					<Btn styling="my-4" disabled={mutation.isLoading}>
+						{mutation.isLoading ? <Spinner /> : 'Signup'}
+					</Btn>
 				</form>
+				{mutation.isError ? <ErrorMessage error={mutation.error} /> : null}
 			</FormLayout>
 		</>
 	);

@@ -24,12 +24,7 @@ const CreateComment = ({
 		handleSubmit,
 		reset,
 		formState: { errors, isDirty, isValid },
-	} = useForm<CreateCommentData>({
-		defaultValues: {
-			rating: 0,
-			text: '',
-		},
-	});
+	} = useForm<CreateCommentData>();
 	const key = ['comments', prodId, sort];
 
 	const { user } = useAuthContext();
@@ -69,7 +64,6 @@ const CreateComment = ({
 				};
 			});
 
-			console.log(queryClient.getQueryData(key));
 			return { previousComments };
 		},
 		onError(error, variables, context) {

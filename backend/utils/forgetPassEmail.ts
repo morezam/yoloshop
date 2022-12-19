@@ -1,8 +1,9 @@
 import { transporter } from './createTransporter';
 
 export const forgetPassEmail = async (to: string, secNum: number) => {
+	console.log(`to: ${to} secNum: ${secNum}`);
 	const mailOptions = {
-		from: process.env.NODEMAILER_FROM,
+		from: process.env.NODEMAILER_AUTH_USER,
 		to,
 		subject: 'Yolo Shop Account Change Password Security Code',
 		html: `
@@ -20,6 +21,7 @@ export const forgetPassEmail = async (to: string, secNum: number) => {
 
 	try {
 		const res = await transporter.sendMail(mailOptions);
+
 		console.log(res);
 		return true;
 	} catch (error) {

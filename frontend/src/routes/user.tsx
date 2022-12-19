@@ -10,11 +10,13 @@ import { RouteObject } from 'react-router-dom';
 import Favorites, { favLoader } from '@pages/user/favorites';
 import UserComments from '@pages/user/comments';
 import UserOrders from '@pages/user/orders';
+import UserOrderDetails from '@pages/user/userOrderDetails';
 
 export const userSignRoutes: RouteObject[] = [
 	{
 		path: '/login',
 		element: <Login />,
+		errorElement: <Login />,
 	},
 	{
 		path: '/signup',
@@ -61,6 +63,11 @@ export const userSignRoutes: RouteObject[] = [
 	{
 		path: '/user/profile/:id/orders',
 		element: <UserOrders />,
+		errorElement: <ErrorComponent />,
+	},
+	{
+		path: '/user/profile/:id/order/:orderId',
+		element: <UserOrderDetails />,
 		errorElement: <ErrorComponent />,
 	},
 ];

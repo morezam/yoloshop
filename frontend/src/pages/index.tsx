@@ -7,6 +7,10 @@ import CustomErrorBoundary from '@components/CustomErrorBoundary';
 import Pagination from '@components/pagination';
 import ProductCard from '@components/product/ProductCard';
 import Nav from '@components/Nav';
+import ProductSkeleton from '@components/skeletons/ProductSkeleton';
+import NotFound from '@components/NotFound';
+import { useAuthContext } from '@context/authContext';
+import Btn from '@components/Btn';
 
 interface PaginatedProducts {
 	page: number;
@@ -22,7 +26,7 @@ const Home = () => {
 	);
 	const [sort, setSort] = useState<string | null>('');
 	const [key, setKey] = useState<string | null>('');
-	const { data } = useQuery({
+	const { data, isLoading } = useQuery({
 		queryKey: ['products', page, key, sort],
 		queryFn: async () => {
 			return shop.get<PaginatedProducts>(
@@ -31,10 +35,11 @@ const Home = () => {
 		},
 	});
 
+	const { user } = useAuthContext();
+
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		const key = location.search;
 		if (searchParams.get('key')) {
 			setKey(searchParams.get('key'));
 		} else {
@@ -67,67 +72,90 @@ const Home = () => {
 	return (
 		<div>
 			<CustomErrorBoundary>
-				<Nav onProductSearch={onProductSearch} term={key} />
-				{data ? (
-					<div className="lg:px-5 mb-10 xl:px-16">
-						<select
-							className="md:hidden my-4"
-							value={sort as string}
-							onChange={e => {
-								navigate(`?sort=${e.target.value}`);
-								setSort(e.target.value);
-							}}>
-							{sorts.map(sortObj => (
-								<option
-									value={sortObj.sort}
-									key={sortObj.sort}
-									className={`cursor-pointer ${
-										searchParams.get('sort') === sortObj.sort
-											? 'text-red-500'
-											: 'text-gray-600'
-									}`}>
-									{sortObj.title}
-								</option>
-							))}
-						</select>
-						<div className="my-3 hidden md:flex ">
-							{sorts.map(sort => (
-								<NavLink
-									to={`?sort=${sort.sort}`}
-									onClick={() => {
-										setSort(sort.sort);
-									}}
-									className={`md:px-2 lg:px-4  ${
-										searchParams.get('sort') === sort.sort
-											? 'text-red-500'
-											: 'text-gray-600'
-									}`}
-									key={sort.sort}>
-									{sort.title}
-								</NavLink>
-							))}
-						</div>
-						<ul className="grid  grid-cols-2 xs:grid-cols-3  gap-y-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5">
-							{data.data.products.map(product => {
-								return (
-									<li
-										key={product._id}
-										className="hover:shadow-lg border-2 border-gray-200">
-										<Link to={`/product/${product._id}`}>
-											<ProductCard product={product} />
-										</Link>
-									</li>
-								);
-							})}
-						</ul>
-						<Pagination
-							currentPage={page}
-							onPageChange={page => setPage(page)}
-							pageSize={15}
-							totalPageCount={data.data.pages}
-						/>
+				<Nav onProductSearch={onProductSearch} />
+				{isLoading && (
+					<div className="lg:px-5 mb-10 xl:px-16 grid grid-cols-2 xs:grid-cols-3  gap-y-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5">
+						<ProductSkeleton />
+						<ProductSkeleton />
+						<ProductSkeleton />
+						<ProductSkeleton />
+						<ProductSkeleton />
 					</div>
-				) : null}
+				)}
+
+				{data && data?.data.products.length === 0 ? (
+					<NotFound>
+						{user.isAdmin ? (
+							<div className="max-w-xs mx-auto">
+								<p>No Product Found</p>
+								<Link to={`/user/profile/createProduct`}>
+									<Btn styling="mt-4">Create Product</Btn>
+								</Link>
+							</div>
+						) : (
+							'No Product Found'
+						)}
+					</NotFound>
+				) : (
+					data && (
+						<div className="lg:px-5 mb-10 xl:px-16">
+							<select
+								className="md:hidden my-4"
+								value={sort as string}
+								onChange={e => {
+									navigate(`?sort=${e.target.value}`);
+									setSort(e.target.value);
+								}}>
+								{sorts.map(sortObj => (
+									<option
+										value={sortObj.sort}
+										key={sortObj.sort}
+										className={`cursor-pointer ${
+											searchParams.get('sort') === sortObj.sort
+												? 'text-red-500'
+												: 'text-gray-600'
+										}`}>
+										{sortObj.title}
+									</option>
+								))}
+							</select>
+							<div className="my-3 hidden md:flex ">
+								{sorts.map(sort => (
+									<NavLink
+										to={`?sort=${sort.sort}`}
+										onClick={() => setSort(sort.sort)}
+										className={`md:px-2 lg:px-4  ${
+											searchParams.get('sort') === sort.sort
+												? 'text-red-500'
+												: 'text-gray-600'
+										}`}
+										key={sort.sort}>
+										{sort.title}
+									</NavLink>
+								))}
+							</div>
+							<ul className="grid grid-cols-2 xs:grid-cols-3  gap-y-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5">
+								{data.data.products.map(product => {
+									return (
+										<li
+											key={product._id}
+											className="hover:shadow-lg border-2 border-gray-200">
+											<Link to={`/product/${product._id}`}>
+												<ProductCard product={product} />
+											</Link>
+										</li>
+									);
+								})}
+							</ul>
+							<Pagination
+								currentPage={page}
+								onPageChange={page => setPage(page)}
+								pageSize={15}
+								totalPageCount={data.data.pages}
+							/>
+						</div>
+					)
+				)}
 			</CustomErrorBoundary>
 		</div>
 	);

@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { User } from '@models/userModel';
+import { verificationEmail } from '@utils/verificationEmail';
 
 interface UserPayload {
-	id: string;
+	email: string;
 }
 
 export const userVerify = async (
@@ -25,7 +26,7 @@ export const userVerify = async (
 			process.env.JWT_SECRET_MAIL
 		) as UserPayload;
 
-		const user = await User.findById(decoded.id);
+		const user = await User.findOne({ email: decoded.email });
 
 		if (!user) {
 			res.status(404);
@@ -70,6 +71,46 @@ export const userVerify = async (
 		</div>
 			`);
 		});
+	} catch (error) {
+		res.status(500);
+		next(error);
+		return;
+	}
+};
+
+export const resendVerificationEmail = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	const email = req.query.email;
+
+	if (!email) {
+		res.status(404);
+		next(new Error('No Email Entered'));
+		return;
+	}
+
+	try {
+		const user = await User.findOne({ email });
+
+		if (!user) {
+			res.status(404);
+			next(new Error('No User Found'));
+			return;
+		}
+
+		const sent = await verificationEmail(user.email, user.name);
+
+		if (!sent) {
+			res.status(400);
+			res.send('could not send the email');
+			return;
+		}
+
+		res.send(
+			`Verification Email was sent to ${user.email} please check your inbox and verify your email`
+		);
 	} catch (error) {
 		res.status(500);
 		next(error);
