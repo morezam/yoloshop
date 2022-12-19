@@ -17,7 +17,9 @@
 	"scripts": {
 		"client": "npm run dev --prefix frontend",
 		"server": "nodemon",
-		"start": "concurrently \"npm run server\" \"npm run client\" "
+		"start": "concurrently \"npm run server\" \"npm run client\" ",
+		"prod": "node -r tsconfig-paths/register -r ts-node/register ./backend/server.ts",
+		"postBuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
 	},
 	"keywords": [],
 	"author": "",

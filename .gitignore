@@ -13,6 +13,8 @@ dist
 dist-ssr
 *.local
 
+/frontend/dist
+
 .env
 
 # Editor directories and files
