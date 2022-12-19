@@ -10,6 +10,7 @@ import TableLayout from '@layouts/TableLayout';
 import DeleteModal from '@components/modals/DeleteModal';
 import Btn from '@components/Btn';
 import NotFound from '@components/NotFound';
+import Spinner from '@components/spinner';
 
 interface ResponseData {
 	users: UserType<string>[];
@@ -21,7 +22,7 @@ const AllUsers = () => {
 	const [page, setPage] = useState(1);
 	const [limit, setLimit] = useState(15);
 
-	const { data } = useQuery({
+	const { data, isLoading } = useQuery({
 		queryKey: ['users', page],
 		queryFn: async () => {
 			return shop.get<ResponseData>(`/user/all?page=${page}&limit=${limit}`, {
@@ -33,12 +34,13 @@ const AllUsers = () => {
 		keepPreviousData: true,
 	});
 
-	const users = data?.data.users;
-
 	return (
 		<>
 			<AdminNav />
-
+			{isLoading && <Spinner />}
+			{data && data.data.users.length === 0 ? (
+				<NotFound>No Users Found</NotFound>
+			) : null}
 			{data && data.data.users.length !== 0 ? (
 				<>
 					<TableLayout
@@ -62,9 +64,7 @@ const AllUsers = () => {
 						onPageChange={page => setPage(page as number)}
 					/>
 				</>
-			) : (
-				<NotFound>No Users Found</NotFound>
-			)}
+			) : null}
 		</>
 	);
 };

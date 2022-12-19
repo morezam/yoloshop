@@ -1,13 +1,16 @@
 import { useState, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from 'react-icons/ai';
+import Logo from '@components/Logo';
 
 const ProfileNav = memo(({ children }: { children: React.ReactNode }) => {
 	const [open, setOpen] = useState(false);
 
 	return (
 		<nav className="flex mb-2 text-lg relative shadow-sm justify-between transition-all duration-300 items-center px-5 py-3 bg-slate-800 text-slate-100">
-			<Link to="/">LOGO</Link>
+			<Link to="/">
+				<Logo />
+			</Link>
 			<div
 				onClick={() => setOpen(!open)}
 				className="z-20 text-2xl -rotate-90 md:hidden">

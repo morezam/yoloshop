@@ -30,10 +30,11 @@ const UserOrders = () => {
 
 	return (
 		<div>
-			{data ? (
+			<UserNav />
+			{isLoading ? (
+				<Spinner />
+			) : data ? (
 				<>
-					<UserNav />
-					{isLoading && <Spinner />}
 					<Orders orders={data.data.orders} />
 					<Pagination
 						currentPage={page}

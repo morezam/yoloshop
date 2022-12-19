@@ -32,10 +32,10 @@ const AllComments = () => {
 
 	return (
 		<div>
+			<AdminNav />
+			{isLoading && <Spinner />}
 			{data ? (
 				<>
-					<AdminNav />
-					{isLoading && <Spinner />}
 					<Comments refetch={refetch} comments={data.data.comments} admin />
 					<Pagination
 						currentPage={page}

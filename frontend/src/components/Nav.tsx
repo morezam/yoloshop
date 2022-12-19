@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import { useAuthContext } from '@context/authContext';
 import { useOrderContext } from '@context/orderContext';
+import Logo from './Logo';
 
 const Nav = memo(
 	({
@@ -29,7 +30,7 @@ const Nav = memo(
 				className={`flex items-center sm:text-lg lg:text-xl bg-slate-800 mb-4 text-slate-200 py-4 justify-between px-5`}>
 				{showSearch ? null : (
 					<Link className="mr-1 ml-2" to={'/'}>
-						LOGO
+						<Logo />
 					</Link>
 				)}
 

@@ -57,10 +57,10 @@ const AllOrders = () => {
 
 	return (
 		<div>
+			<AdminNav />
+			{isLoading && <Spinner />}
 			{data ? (
 				<>
-					<AdminNav />
-					{isLoading && <Spinner />}
 					<Orders orders={data.data.orders} setDelivered={setDelivered} />
 					<Pagination
 						currentPage={page}

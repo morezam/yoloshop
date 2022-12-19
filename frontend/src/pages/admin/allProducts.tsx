@@ -44,10 +44,14 @@ const Products = () => {
 
 	const { data, refetch, isLoading } = useQuery(getAllProducts(page));
 	return (
-		<>
+		<div>
 			<AdminNav />
-			{isLoading && <Spinner />}
-			{data && data.data.products.length !== 0 ? (
+			{data && data.data.products.length === 0 ? (
+				<NotFound>No Products Found</NotFound>
+			) : null}
+			{isLoading ? (
+				<Spinner />
+			) : data ? (
 				<>
 					<TableLayout
 						headers={[
@@ -117,7 +121,7 @@ const Products = () => {
 			) : (
 				<NotFound>No Products Found</NotFound>
 			)}
-		</>
+		</div>
 	);
 };
 
