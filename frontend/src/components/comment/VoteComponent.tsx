@@ -100,6 +100,9 @@ const VoteComponent = ({
 		onError: (err, data, context) => {
 			queryClient.setQueryData(key, context?.previousComment);
 		},
+		onSettled: () => {
+			queryClient.invalidateQueries(key);
+		},
 	});
 
 	return (

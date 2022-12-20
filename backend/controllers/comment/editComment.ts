@@ -166,7 +166,9 @@ export const likeComment = async (
 				votedUser.like = like;
 				comment.like = like ? comment.like + 1 : comment.like - 1;
 				comment.disLike = like ? comment.disLike - 1 : comment.disLike + 1;
-				saveComment('vote changed from like to disLike');
+				saveComment(
+					`vote changed from ${like ? 'dislike to like' : 'like to dislike'}`
+				);
 				return;
 			}
 		} else {
@@ -178,7 +180,7 @@ export const likeComment = async (
 			comment.like = like ? comment.like + 1 : comment.like;
 			comment.disLike = like ? comment.disLike : comment.disLike + 1;
 
-			saveComment(`comment ${like ? 'Liked' : 'Dis Liked'}`);
+			saveComment(`comment ${like ? 'Liked' : 'Disliked'}`);
 		}
 	} catch (error) {
 		res.status(500);

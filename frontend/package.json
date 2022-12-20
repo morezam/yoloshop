@@ -20,7 +20,8 @@
 		"react-loading-skeleton": "^3.1.0",
 		"react-modal": "^3.16.1",
 		"react-router-dom": "^6.4.3",
-		"vite-tsconfig-paths": "^3.6.0"
+		"vite-tsconfig-paths": "^3.6.0",
+		"yoloshop": "file:.."
 	},
 	"devDependencies": {
 		"@types/react": "^18.0.22",

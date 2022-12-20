@@ -10,7 +10,8 @@ export const verificationEmail = async (to: string, name: string) => {
 		}
 	);
 
-	const url = `https://yoloshop.onrender.com/user/verify?id=${token_mail_verification}`;
+	// const url = `https://yoloshop.onrender.com/user/verify?id=${token_mail_verification}`;
+	const url = `${process.env.WEBSITE_URL}user/verify?id=${token_mail_verification}`;
 	console.log(
 		`from : ${process.env.NODEMAILER_AUTH_USER} to : ${to} url: ${url}`
 	);
