@@ -18,7 +18,7 @@
 		"client": "npm run dev --prefix frontend",
 		"server": "nodemon",
 		"dev": "concurrently \"npm run server\" \"npm run client\" ",
-		"build": "npm install && rimraf dist && npx tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+		"build": "rimraf dist && npx tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
 		"postbuild": "npm run front && npm run build",
 		"start": "node ./dist/backend/server.js",
 		"front": "npm install --prefix frontend && npm run build --prefix frontend"
