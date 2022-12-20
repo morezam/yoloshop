@@ -1,7 +1,5 @@
 // Shared Types between frontend and backend
 
-import { AxiosError } from 'axios';
-
 export interface ProductType<T> {
 	_id: string;
 	name: string;
@@ -85,7 +83,3 @@ export interface OrderType<T> {
 	createdAt: Date;
 	updatedAt: Date;
 }
-
-export type ErrorRes = AxiosError<{
-	message: string;
-}>;

@@ -1,4 +1,5 @@
-import { ErrorRes, ProductType } from '@types';
+import { AxiosError } from 'axios';
+import { ProductType } from '@types';
 import ProductForm from '@components/product/ProductForm';
 import { useMutation } from '@tanstack/react-query';
 import { shop } from '@utils/api';
@@ -11,6 +12,10 @@ import { useNavigate } from 'react-router-dom';
 import Spinner from '@components/spinner';
 import DeleteModal from '@components/modals/DeleteModal';
 import { useState } from 'react';
+
+type ErrorRes = AxiosError<{
+	message: string;
+}>;
 
 const ProductDetailsComponent = ({
 	product,
