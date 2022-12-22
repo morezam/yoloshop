@@ -30,7 +30,7 @@ const Home = () => {
 		queryKey: ['products', page, key, sort],
 		queryFn: async () => {
 			return shop.get<PaginatedProducts>(
-				`/products?page=${page}&key=${key}&limit=5&sort=${sort}`
+				`/products?page=${page}&key=${key}&limit=10&sort=${sort}`
 			);
 		},
 	});
