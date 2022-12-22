@@ -39,7 +39,7 @@ const Nav = memo(
 						<form
 							className={`flex items-center ${
 								showSearch ? 'inline' : 'hidden'
-							}`}
+							} sm:inline`}
 							onSubmit={handleSubmit(onProductSearch)}>
 							<div className="relative">
 								<input
