@@ -147,7 +147,9 @@ export const likeComment = async (
 			});
 		};
 
-		const votedUser = comment.votedUsers.find(user => user._id === user._id);
+		const votedUser = comment.votedUsers.find(
+			voteUser => voteUser._id === user._id
+		);
 
 		if (votedUser) {
 			if ((votedUser.like && like) || (!votedUser.like && !like)) {
